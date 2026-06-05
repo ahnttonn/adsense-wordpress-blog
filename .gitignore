@@ -32,7 +32,10 @@ private-key*
 backup-key*
 
 # WordPress runtime and generated files
-wordpress/
+wordpress/*
+!wordpress/themes/
+!wordpress/themes/yolkmeet-editorial/
+!wordpress/themes/yolkmeet-editorial/**
 wp-content/uploads/
 wp-content/cache/
 wp-content/upgrade/
