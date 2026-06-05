@@ -144,6 +144,15 @@ while IFS= read -r article_path; do
   fi
 done < <(find "$article_dir" -maxdepth 1 -name '*.md' | sort)
 
+visible_body_boilerplate_fixture="$repo_root/tests/fixtures/content-quality/visible-body-boilerplate.md"
+if [ -f "$visible_body_boilerplate_fixture" ]; then
+  if bash "$quality_gate" "$visible_body_boilerplate_fixture" >/dev/null 2>&1; then
+    fail "content quality gate allowed visible-body boilerplate fixture"
+  fi
+else
+  fail "missing visible-body boilerplate fixture: $visible_body_boilerplate_fixture"
+fi
+
 if [ "$failures" -ne 0 ]; then
   echo "Content contract checks failed: $failures" >&2
   exit 1

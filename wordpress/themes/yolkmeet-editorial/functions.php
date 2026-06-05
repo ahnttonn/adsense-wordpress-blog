@@ -328,8 +328,21 @@ function yolkmeet_editorial_reading_time(): string
     return sprintf(_n('%d min read', '%d min read', $minutes, 'yolkmeet-editorial'), $minutes);
 }
 
+function yolkmeet_editorial_should_render_ad_placeholders(): bool
+{
+    if (defined('YOLKMEET_SHOW_AD_PLACEHOLDERS')) {
+        return (bool) YOLKMEET_SHOW_AD_PLACEHOLDERS;
+    }
+
+    return (bool) get_option('_yolkmeet_show_ad_placeholders', false);
+}
+
 function yolkmeet_editorial_render_ad_slot(string $position, bool $mobile_safe = false): void
 {
+    if (!yolkmeet_editorial_should_render_ad_placeholders()) {
+        return;
+    }
+
     $slot = sanitize_html_class($position);
     $classes = 'ad-slot ad-' . $slot;
     if ($mobile_safe) {

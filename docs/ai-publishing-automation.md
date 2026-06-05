@@ -147,7 +147,6 @@ content corrections that require a refresh.
 
 ## Final Approval Policy
 
-Publishing requires final approval until at least 100 successful articles have shipped and Search
-Console quality signals are stable. Before that threshold, the system can prepare drafts and draft
-uploads only. It must never auto-publish without an explicit approval step.
-
+Publishing requires final approval until at least 100 approved articles have shipped and 8 weekly
+Search Console reports show stable quality signals. Before that threshold, the system can prepare
+briefs, drafts, and draft uploads only. It must never auto-publish without an explicit approval step.

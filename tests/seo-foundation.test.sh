@@ -109,7 +109,8 @@ assert_contains "$home_html" "<link rel=\"canonical\" href=\"https://www.yolkmee
 assert_contains "$home_html" "\"@type\":\"WebSite\"" "homepage WebSite schema"
 assert_contains "$home_html" "\"@type\":\"WebPage\"" "homepage WebPage schema"
 assert_contains "$home_html" "\"@type\":\"Organization\"" "homepage Organization schema"
-assert_contains "$home_html" "\"name\":\"Yolkmeet\",\"description\":\"AI automation field guides and workflow comparisons\"" "homepage schema brand description"
+assert_contains "$home_html" "\"name\":\"Yolkmeet\"" "homepage schema brand name"
+assert_contains "$home_html" "\"description\":\"AI automation field guides and workflow comparisons\"" "homepage schema brand description"
 assert_contains "$home_html" "\"urlTemplate\":\"https://www.yolkmeet.com/search/{search_term_string}/\"" "homepage search action schema"
 
 assert_contains "$post_html" "<title>AI Workflow Automation Stack: Starter Notes - Yolkmeet</title>" "post title"

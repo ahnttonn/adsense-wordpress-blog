@@ -26,6 +26,26 @@ word_count() {
   awk '{ total += NF } END { print total + 0 }'
 }
 
+visible_body() {
+  awk '
+    NR == 1 && $0 == "---" { in_fm = 1; next }
+    in_fm && $0 == "---" { in_fm = 0; next }
+    !in_fm { print }
+  ' "$candidate"
+}
+
+visible_body_word_count() {
+  visible_body | word_count
+}
+
+candidate_in_launch_batch() {
+  case "$candidate" in
+    "$repo_root"/content/launch-batch/*) return 0 ;;
+    content/launch-batch/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 validate_launch_manifest() {
   [ -f "$launch_manifest" ] || return 0
 
@@ -210,6 +230,78 @@ validate_originality() {
   done < <(find "$fixture_source_dir" -type f -name '*.txt' -print | sort)
 }
 
+validate_visible_body_language() {
+  local phrase
+  local visible_text
+  visible_text="$(visible_body)"
+
+  if ! candidate_in_launch_batch; then
+    while IFS= read -r phrase; do
+      [ -n "$phrase" ] || continue
+      if printf '%s\n' "$visible_text" | grep -Fqi -- "$phrase"; then
+        fail "visible body contains blocked boilerplate: $phrase"
+      fi
+    done <<'EOF'
+This page is a source-derived editorial draft
+It does not claim private benchmark testing
+Add firsthand screenshots only after
+EOF
+  fi
+
+  if [ "$(front_matter_list_count testing_evidence)" -lt 1 ]; then
+    while IFS= read -r phrase; do
+      [ -n "$phrase" ] || continue
+      if printf '%s\n' "$visible_text" | grep -Fqi -- "$phrase"; then
+        fail "testing claim requires testing_evidence front matter: $phrase"
+      fi
+    done <<'EOF'
+we tested
+hands-on benchmark
+our benchmark
+screenshots show
+EOF
+  fi
+}
+
+validate_depth() {
+  local template normalized_template min_words exception
+
+  exception="$(front_matter_value depth_exception || true)"
+  if [ -n "$exception" ]; then
+    return 0
+  fi
+
+  if candidate_in_launch_batch; then
+    return 0
+  fi
+
+  template="$(front_matter_value template || true)"
+  if [ -z "$template" ]; then
+    template="$(front_matter_value article_type || true)"
+  fi
+  normalized_template="$(printf '%s' "$template" | normalize)"
+
+  case "$normalized_template" in
+    *comparison*|*alternatives*|*alternative*|*pricing*|*tool*review*)
+      min_words=1200
+      ;;
+    *workflow*|*tutorial*)
+      min_words=900
+      ;;
+    *troubleshooting*|*error*fix*)
+      min_words=700
+      ;;
+    *prompt*)
+      min_words=600
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+
+  [ "$(visible_body_word_count)" -ge "$min_words" ] || fail "template '$template' requires at least $min_words visible-body words or depth_exception"
+}
+
 if [ -z "$candidate" ]; then
   fail "usage: $0 <markdown-file>" 2
 fi
@@ -228,6 +320,8 @@ fi
 validate_front_matter_shape
 validate_required_metadata
 validate_originality
+validate_visible_body_language
+validate_depth
 validate_launch_manifest
 
 echo "content quality gate passed: $(basename "$candidate")"

@@ -14,6 +14,10 @@
 - Articles refreshed:
 - Article decay watchlist:
 - Internal links added:
+- Refresh decisions:
+- Expand decisions:
+- Prune decisions:
+- Merge decisions:
 
 ## Technical Health
 - Core Web Vitals:
@@ -26,6 +30,8 @@
 ## Monetization Readiness
 - AdSense readiness:
 - Invalid traffic review:
+- Auto ads UX:
+- AdSense revenue blocker:
 - Consent/privacy follow-ups:
 
 ## Notes
