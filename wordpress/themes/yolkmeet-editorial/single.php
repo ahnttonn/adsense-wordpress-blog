@@ -23,11 +23,9 @@
                 <li><a href="#update-log"><?php esc_html_e('Update log', 'yolkmeet-editorial'); ?></a></li>
             </ol>
         </nav>
-        <?php yolkmeet_editorial_render_ad_slot('top', true); ?>
         <div id="article-body" class="article-content">
             <?php the_content(); ?>
         </div>
-        <?php yolkmeet_editorial_render_ad_slot('mid', true); ?>
         <section class="author-box">
             <h2><?php esc_html_e('Author and review note', 'yolkmeet-editorial'); ?></h2>
             <p><?php esc_html_e('By the Yolkmeet editorial desk. Reviewed for workflow clarity, source notes, and update assumptions before publication.', 'yolkmeet-editorial'); ?></p>
@@ -66,7 +64,6 @@
                 ?>
             </p>
         </section>
-        <?php yolkmeet_editorial_render_ad_slot('end', true); ?>
         <?php $related = yolkmeet_editorial_related_posts(); ?>
         <section class="related-posts">
             <h2><?php esc_html_e('Related reading', 'yolkmeet-editorial'); ?></h2>
@@ -86,7 +83,6 @@
             <h2><?php esc_html_e('Reading map', 'yolkmeet-editorial'); ?></h2>
             <p><?php esc_html_e('Decision, setup notes, comparison table, source notes, and next actions.', 'yolkmeet-editorial'); ?></p>
         </section>
-        <?php yolkmeet_editorial_render_ad_slot('rail'); ?>
     </aside>
 </article>
 <?php endwhile; ?>

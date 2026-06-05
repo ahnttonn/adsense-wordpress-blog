@@ -4,7 +4,10 @@
         <header class="article-header">
             <p class="eyebrow"><?php esc_html_e('Topic hub', 'yolkmeet-editorial'); ?></p>
             <h1><?php the_archive_title(); ?></h1>
-            <?php the_archive_description('<p class="dek">', '</p>'); ?>
+            <?php $archive_description = get_the_archive_description(); ?>
+            <?php if ($archive_description !== '') : ?>
+                <div class="dek"><?php echo wp_kses_post($archive_description); ?></div>
+            <?php endif; ?>
         </header>
         <ul class="post-list">
             <?php while (have_posts()) : the_post(); ?>
@@ -17,7 +20,6 @@
                 </li>
             <?php endwhile; ?>
         </ul>
-        <?php yolkmeet_editorial_render_ad_slot('infeed'); ?>
     </div>
     <aside class="rail">
         <section class="rail-panel">

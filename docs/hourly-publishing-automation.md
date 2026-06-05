@@ -6,6 +6,8 @@ Generated: 2026-06-06
 
 The hourly system is a guarded queue, not blind public auto-publishing. Every hour the system may prepare one candidate draft, run source/originality/content/SEO/AEO/GEO/policy gates, and write a WordPress draft payload. Public publish remains disabled until at least 100 approved articles have shipped and 8 weekly Search Console reports show stable quality signals.
 
+For the next 20 approved candidates, the operator layer should bias topic selection toward underrepresented non-AI operator-tech breadth. Use this pillar priority order: WordPress/site ops, automation/no-code, analytics/reporting, creator/business tooling, light security/privacy, then AI tools. This is a selection priority only; it does not weaken publishing_approval, source, originality, SEO/AEO/GEO, or no-YMYL gates.
+
 ## Required Gates
 
 1. Candidate file exists and is readable.
@@ -77,6 +79,8 @@ YOLKMEET_AUTO_WP_PUBLISH=0 bash infra/hourly-publishing-cron.sh
 ```
 
 Codex runs the operator layer hourly: create one candidate, run the gates, and atomically move the passing candidate into `content/hourly-queue/ready/`. Codex does not run the WordPress publish command. OS cron is the only process that consumes `ready/` and promotes approved candidates to WordPress through WP-CLI.
+
+Operator selection must follow the near-term pillar priority in `docs/content-pillar-map.md` for the next 20 approved candidates. Prefer WordPress/site ops, automation/no-code, analytics/reporting, creator/business tooling, and light security/privacy until those underrepresented non-AI pillars are materially represented; use AI tools only after that breadth requirement is satisfied or when no approved non-AI candidate can pass the gates.
 
 ## Approval Metadata
 

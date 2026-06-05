@@ -71,6 +71,13 @@ require_pattern 'About|Contact|Privacy' "creates required trust pages"
 require_pattern 'post create' "creates a real sample post for theme QA"
 require_pattern 'term create category' "creates a category surface"
 require_pattern 'term list category --slug=ai-workflow-automation' "looks up category by slug or id"
+for slug in ai-tool-comparisons ai-workflow-automation ai-research-playbooks ai-marketing-ops ai-prompt-systems; do
+  require_pattern "$slug" "keeps $slug category available"
+done
+for label in "Tool Comparisons" "Workflow Automation" "Research Playbooks" "Marketing Ops" "Prompt Systems"; do
+  require_pattern "$label" "uses broadened visible topic label: $label"
+done
+require_pattern 'term update category|--description' "updates category descriptions for archive pages"
 require_pattern 'option update blog_public 1' "allows AdSense and Google crawlers to verify the public site"
 require_pattern 'elementor|divi|beaver-builder|visual-composer' "guards against heavy builders"
 require_pattern 'delete_managed_menus' "clears managed menus before re-adding them"

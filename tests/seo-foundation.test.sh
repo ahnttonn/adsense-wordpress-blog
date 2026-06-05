@@ -32,7 +32,7 @@ assert_contains() {
   local needle="$2"
   local description="$3"
 
-  if ! printf '%s' "$haystack" | grep -Fq -- "$needle"; then
+  if ! grep -Fq -- "$needle" <<<"$haystack"; then
     fail "missing SEO baseline evidence: $description"
   fi
 }
@@ -42,7 +42,7 @@ assert_not_contains() {
   local needle="$2"
   local description="$3"
 
-  if printf '%s' "$haystack" | grep -Fq -- "$needle"; then
+  if grep -Fq -- "$needle" <<<"$haystack"; then
     fail "unexpected SEO baseline drift: $description"
   fi
 }
@@ -54,7 +54,7 @@ assert_count() {
   local description="$4"
   local actual
 
-  actual="$(printf '%s' "$haystack" | grep -Fc -- "$needle" || true)"
+  actual="$(grep -Fc -- "$needle" <<<"$haystack" || true)"
   if [ "$actual" != "$expected" ]; then
     fail "unexpected SEO baseline count for $description: expected $expected, got $actual"
   fi
@@ -67,7 +67,7 @@ assert_count_at_least() {
   local description="$4"
   local actual
 
-  actual="$(printf '%s' "$haystack" | grep -Fc -- "$needle" || true)"
+  actual="$(grep -Fc -- "$needle" <<<"$haystack" || true)"
   if [ "$actual" -lt "$expected_minimum" ]; then
     fail "unexpected SEO baseline count for $description: expected at least $expected_minimum, got $actual"
   fi

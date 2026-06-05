@@ -23,6 +23,19 @@ The launch batch should support an operator-tech publication rather than an AI-o
 
 These targets apply to the combined launch batch, queued backlog, and next refresh cycle. New YMYL categories such as medical, legal, or financial advice stay out of scope.
 
+## Near-Term Hourly Pillar Priority
+
+For the next 20 approved hourly candidates, bias selection toward underrepresented non-AI operator-tech breadth before adding more AI tooling pages. Use this pillar priority order:
+
+1. WordPress/site ops
+2. automation/no-code
+3. analytics/reporting
+4. creator/business tooling
+5. light security/privacy
+6. AI tools
+
+AI tools remain in the 90-day mix, but they should only fill near-term gaps after the non-AI operator-tech pillars above have been materially represented. The quality bar does not change: candidates still need approval metadata, source notes, originality checks, SEO/AEO/GEO readiness, and non-YMYL scope.
+
 ## Inventory Reconciliation
 
 Current state:
@@ -70,8 +83,9 @@ Default rule: keep the existing markdown slug as the launch artifact unless ther
 ## Publication Priority
 
 1. Keep all matched and launch-only markdown drafts available for Wave 2 rewrites.
-2. Expand the manifest-only queue in pillar order, starting with automation/no-code and WordPress/site ops gaps before adding more AI lookalike listicles.
-3. Use analytics/reporting, creator/business tooling, and light security/privacy to reduce topical repetition and build more durable return traffic.
+2. For the next 20 approved hourly candidates, follow the underrepresented non-AI pillar priority above before adding more AI lookalike listicles.
+3. Expand the manifest-only queue in pillar order, starting with WordPress/site ops and automation/no-code gaps before adding more AI pages.
+4. Use analytics/reporting, creator/business tooling, and light security/privacy to reduce topical repetition and build more durable return traffic.
 
 ## Queue Rules
 

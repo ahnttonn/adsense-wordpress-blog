@@ -56,6 +56,14 @@ if [ -f "$configure_script" ]; then
   for slug in about contact privacy-policy terms editorial-policy ai-use-policy affiliate-disclosure cookie-policy; do
     assert_contains "$body" "\"$slug\"" "configurator publishes $slug"
   done
+  for slug in ai-tool-comparisons ai-workflow-automation ai-research-playbooks ai-marketing-ops ai-prompt-systems; do
+    assert_contains "$body" "$slug" "configurator keeps $slug in the Topics menu"
+  done
+  for label in "Tool Comparisons" "Workflow Automation" "Research Playbooks" "Marketing Ops" "Prompt Systems"; do
+    assert_contains "$body" "$label" "configurator uses broadened topic label: $label"
+  done
+  assert_contains "$body" "term update category" "configurator applies category descriptions"
+  assert_contains "$body" "--description" "configurator writes category archive descriptions"
   assert_contains "$body" "ensure_page" "configurator uses idempotent page creation"
   assert_contains "$body" "menu item add-post" "configurator links trust pages through WordPress menus"
   assert_contains "$body" "AdSense application is account-gated" "configurator records account-gated submission boundary"
@@ -115,8 +123,12 @@ fi
 if [ -f "$theme_functions" ]; then
   body="$(cat "$theme_functions")"
   assert_contains "$body" "wp_head" "theme keeps AdSense verification in the document head"
-  assert_contains "$body" "mobile_safe" "theme retains mobile-safe ad slot layout"
+  assert_contains "$body" "pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1424742974208042" "theme keeps AdSense Auto ads head script"
   assert_not_contains "$body" "<ins class=\"adsbygoogle\"" "theme must not render live ad units before approval"
+  assert_not_contains "$body" "adsbygoogle.push" "theme must not render manual AdSense push calls"
+  assert_not_contains "$body" "data-ad-slot" "theme must not render manual ad unit slot ids"
+  assert_not_contains "$body" "yolkmeet_editorial_render_ad_slot" "theme must not expose manual ad placeholder helper"
+  assert_not_contains "$body" "Advertisement" "theme must not render visible ad placeholder copy"
   assert_not_contains "$body" "click the ads" "theme must not render click-inducing ad language"
   assert_not_contains "$body" "support us" "theme must not render click-inducing support language"
   assert_not_contains "$body" "Favorite Sites" "theme must not render misleading ad headings"
@@ -125,7 +137,8 @@ fi
 
 if [ -f "$theme_styles" ]; then
   body="$(cat "$theme_styles")"
-  assert_contains "$body" "min-height: 280px" "theme reserves mobile-safe ad slot height"
+  assert_not_contains "$body" ".ad-slot" "theme must not reserve visible manual ad slot boxes"
+  assert_not_contains "$body" "min-height: 280px" "theme must not reserve mobile-safe manual ad slot height"
 fi
 
 if [ -x "$preflight_script" ] && [ -d "$fixture_dir" ]; then

@@ -9,6 +9,7 @@ SEO_PLUGIN="autodescription"
 SECURITY_PLUGIN="limit-login-attempts-reloaded"
 REDIS_PLUGIN="redis-cache"
 SITE_URL="https://www.yolkmeet.com"
+TOPIC_CATEGORY_SLUGS=(ai-tool-comparisons ai-workflow-automation ai-research-playbooks ai-marketing-ops ai-prompt-systems)
 
 require_root() {
   if [ "$(id -u)" -ne 0 ]; then
@@ -71,10 +72,44 @@ ensure_page() {
   fi
 }
 
-ensure_category() {
-  if [ -z "$(wp_cli term list category --slug=ai-workflow-automation --field=term_id | head -n 1)" ]; then
-    wp_cli term create category "AI Workflow Automation" --slug=ai-workflow-automation >/dev/null
-  fi
+topic_label() {
+  case "$1" in
+    ai-tool-comparisons) printf 'Tool Comparisons' ;;
+    ai-workflow-automation) printf 'Workflow Automation' ;;
+    ai-research-playbooks) printf 'Research Playbooks' ;;
+    ai-marketing-ops) printf 'Marketing Ops' ;;
+    ai-prompt-systems) printf 'Prompt Systems' ;;
+    *)
+      echo "Unknown topic category slug: $1" >&2
+      exit 1
+      ;;
+  esac
+}
+
+topic_description() {
+  case "$1" in
+    ai-tool-comparisons) printf 'Tool comparisons, pricing checks, alternatives, and fit notes for operators choosing a workflow layer.' ;;
+    ai-workflow-automation) printf 'Workflow automation guides for repeatable systems, review gates, and operator-ready execution.' ;;
+    ai-research-playbooks) printf 'Research playbooks for source-aware investigation, verification steps, and reusable evidence trails.' ;;
+    ai-marketing-ops) printf 'Marketing operations notes for campaign workflows, reporting loops, and lightweight content systems.' ;;
+    ai-prompt-systems) printf 'Prompt systems, reusable templates, QA patterns, and review-ready AI operating procedures.' ;;
+    *)
+      echo "Unknown topic category slug: $1" >&2
+      exit 1
+      ;;
+  esac
+}
+
+ensure_categories() {
+  local slug term_id
+  for slug in "${TOPIC_CATEGORY_SLUGS[@]}"; do
+    term_id="$(wp_cli term list category --slug="$slug" --field=term_id | head -n 1)"
+    if [ -z "$term_id" ]; then
+      wp_cli term create category "$(topic_label "$slug")" --slug="$slug" >/dev/null
+      term_id="$(wp_cli term list category --slug="$slug" --field=term_id | head -n 1)"
+    fi
+    wp_cli term update category "$term_id" --name="$(topic_label "$slug")" --slug="$slug" --description="$(topic_description "$slug")" >/dev/null
+  done
 }
 
 ensure_sample_post() {
@@ -88,7 +123,7 @@ ensure_sample_post() {
   else
     post_id="$(wp_cli post create --post_type=post --post_title="AI Workflow Automation Stack: Starter Notes" --post_name="$slug" --post_excerpt="A practical starter stack for AI workflow automation with review gates, comparison rules, and audit notes." --post_content="$content" --post_status=publish --porcelain)"
   fi
-  wp_cli post term set "$post_id" category "AI Workflow Automation" >/dev/null
+  wp_cli post term set "$post_id" category "$(wp_cli term list category --slug=ai-workflow-automation --field=term_id | head -n 1)" >/dev/null
 }
 
 configure_site_options() {
@@ -110,7 +145,7 @@ delete_managed_menus() {
 }
 
 configure_nav() {
-  local menu_id topics_id footer_id
+  local menu_id topics_id footer_id slug term_id
 
   delete_managed_menus
 
@@ -120,7 +155,12 @@ configure_nav() {
   wp_cli menu location assign "$menu_id" primary >/dev/null
 
   topics_id="$(wp_cli menu create Topics --porcelain)"
-  wp_cli menu item add-term "$topics_id" category "$(wp_cli term list category --slug=ai-workflow-automation --field=term_id | head -n 1)" --title="AI Workflow Automation" >/dev/null || true
+  for slug in "${TOPIC_CATEGORY_SLUGS[@]}"; do
+    term_id="$(wp_cli term list category --slug="$slug" --field=term_id | head -n 1)"
+    if [ -n "$term_id" ]; then
+      wp_cli menu item add-term "$topics_id" category "$term_id" --title="$(topic_label "$slug")" >/dev/null || true
+    fi
+  done
   wp_cli menu location assign "$topics_id" topics >/dev/null
 
   footer_id="$(wp_cli menu create Footer --porcelain)"
@@ -138,7 +178,7 @@ purge_fastcgi_cache() {
 main() {
   require_root
   configure_site_options
-  ensure_category
+  ensure_categories
   ensure_page "About" "about" "<p>Yolkmeet publishes practical AI automation guides, workflow comparisons, and source-aware editorial notes for operators and creators.</p><p>Every launch article is designed to show what was tested, what changed, and what readers should verify for their own workflow.</p>"
   ensure_page "Contact" "contact" "<p>Send corrections, tool updates, and partnership questions to <a href=\"mailto:editor@yolkmeet.com\">editor@yolkmeet.com</a>.</p><p>For article corrections, include the URL, the claim, and the source that should be reviewed.</p>"
   ensure_page "Privacy" "privacy" "<p>Yolkmeet uses privacy-conscious analytics and may later use email subscriptions, affiliate links, and AdSense disclosures. Personal data collection is limited to what is needed to operate the publication.</p><p>AdSense and analytics details will be expanded before monetization launch.</p>"

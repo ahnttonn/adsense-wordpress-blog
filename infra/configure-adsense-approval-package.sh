@@ -8,6 +8,7 @@ ADSENSE_PUBLISHER_ID="${ADSENSE_PUBLISHER_ID:-}"
 APPLICATION_BOUNDARY="AdSense application is account-gated"
 TRUST_PAGE_SLUGS=("about" "contact" "privacy-policy" "terms" "editorial-policy" "ai-use-policy" "affiliate-disclosure" "cookie-policy")
 FOOTER_PAGE_SLUGS=("privacy-policy" "terms" "editorial-policy" "ai-use-policy" "affiliate-disclosure" "cookie-policy")
+TOPIC_CATEGORY_SLUGS=(ai-tool-comparisons ai-workflow-automation ai-research-playbooks ai-marketing-ops ai-prompt-systems)
 
 usage() {
   cat <<'EOF'
@@ -156,6 +157,47 @@ ensure_trust_pages() {
   done
 }
 
+topic_label() {
+  case "$1" in
+    ai-tool-comparisons) printf 'Tool Comparisons' ;;
+    ai-workflow-automation) printf 'Workflow Automation' ;;
+    ai-research-playbooks) printf 'Research Playbooks' ;;
+    ai-marketing-ops) printf 'Marketing Ops' ;;
+    ai-prompt-systems) printf 'Prompt Systems' ;;
+    *)
+      echo "Unknown topic category slug: $1" >&2
+      exit 1
+      ;;
+  esac
+}
+
+topic_description() {
+  case "$1" in
+    ai-tool-comparisons) printf 'Tool comparisons, pricing checks, alternatives, and fit notes for operators choosing a workflow layer.' ;;
+    ai-workflow-automation) printf 'Workflow automation guides for repeatable systems, review gates, and operator-ready execution.' ;;
+    ai-research-playbooks) printf 'Research playbooks for source-aware investigation, verification steps, and reusable evidence trails.' ;;
+    ai-marketing-ops) printf 'Marketing operations notes for campaign workflows, reporting loops, and lightweight content systems.' ;;
+    ai-prompt-systems) printf 'Prompt systems, reusable templates, QA patterns, and review-ready AI operating procedures.' ;;
+    *)
+      echo "Unknown topic category slug: $1" >&2
+      exit 1
+      ;;
+  esac
+}
+
+ensure_topic_categories() {
+  local slug category_id
+
+  for slug in "${TOPIC_CATEGORY_SLUGS[@]}"; do
+    category_id="$(category_id_by_slug "$slug")"
+    if [ -z "$category_id" ]; then
+      wp_cli term create category "$(topic_label "$slug")" --slug="$slug" >/dev/null
+      category_id="$(category_id_by_slug "$slug")"
+    fi
+    wp_cli term update category "$category_id" --name="$(topic_label "$slug")" --slug="$slug" --description="$(topic_description "$slug")" >/dev/null
+  done
+}
+
 delete_managed_menus() {
   local menu_ids
   local menu_id
@@ -179,7 +221,7 @@ category_id_by_slug() {
 configure_nav() {
   local menu_id topics_id footer_id
   local category_id
-  local footer_slug
+  local footer_slug topic_slug
 
   delete_managed_menus
 
@@ -189,10 +231,12 @@ configure_nav() {
   wp_cli menu location assign "$menu_id" primary >/dev/null
 
   topics_id="$(wp_cli menu create Topics --porcelain)"
-  category_id="$(category_id_by_slug ai-workflow-automation)"
-  if [ -n "$category_id" ]; then
-    wp_cli menu item add-term "$topics_id" category "$category_id" --title="AI Workflow Automation" >/dev/null
-  fi
+  for topic_slug in "${TOPIC_CATEGORY_SLUGS[@]}"; do
+    category_id="$(category_id_by_slug "$topic_slug")"
+    if [ -n "$category_id" ]; then
+      wp_cli menu item add-term "$topics_id" category "$category_id" --title="$(topic_label "$topic_slug")" >/dev/null
+    fi
+  done
   wp_cli menu location assign "$topics_id" topics >/dev/null
 
   footer_id="$(wp_cli menu create Footer --porcelain)"
@@ -228,6 +272,7 @@ purge_fastcgi_cache() {
 main() {
   reject_unsupported_args "$@"
   ensure_trust_pages
+  ensure_topic_categories
   configure_nav
   configure_ads_txt_readiness
   purge_fastcgi_cache

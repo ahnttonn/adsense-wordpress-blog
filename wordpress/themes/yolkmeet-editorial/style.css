@@ -117,10 +117,10 @@ a:visited {
 .topic-strip,
 .post-meta,
 .eyebrow,
-.ad-slot,
 .footer-grid,
 .button,
-.taxonomy-list {
+.taxonomy-list,
+.topic-link {
   font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -186,6 +186,51 @@ a:visited {
 .lead-story {
   padding-bottom: 28px;
   border-bottom: 1px solid var(--line);
+}
+
+.topic-discovery {
+  margin: 22px 0 24px;
+  padding: 18px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.topic-discovery h2 {
+  margin-bottom: 12px;
+  font-size: 28px;
+}
+
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.topic-link {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.topic-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.topic-link span {
+  font-weight: 700;
+}
+
+.topic-link small {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .eyebrow {
@@ -474,28 +519,6 @@ pre code {
   background: transparent;
 }
 
-.ad-slot,
-.ad-top,
-.ad-mid,
-.ad-end,
-.ad-infeed {
-  display: grid;
-  min-height: 120px;
-  margin: 28px 0;
-  padding: 14px;
-  place-items: center;
-  color: var(--ink-soft);
-  background: var(--paper);
-  border: 1px dashed var(--line);
-  border-radius: var(--radius);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
-.ad-slot--mobile-safe {
-  min-height: 280px;
-}
-
 .code-copy {
   margin: -16px 0 8px auto;
   color: var(--code-fg);
@@ -675,6 +698,10 @@ button {
     font-size: 19px;
   }
 
+  .topic-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .story-card,
   .rail-panel,
   .callout,
@@ -684,10 +711,6 @@ button {
   .update-log,
   .related-posts {
     padding: 14px;
-  }
-
-  .ad-slot {
-    min-height: 280px;
   }
 
   .article-content table,
