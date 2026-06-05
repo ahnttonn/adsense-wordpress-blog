@@ -66,6 +66,58 @@ content="$(jq -r '.content // ""' "$payload")"
 [ -n "$slug" ] || fail "payload missing slug"
 [ -n "$content" ] || fail "payload missing content"
 
+slugify() {
+  printf '%s' "$1" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+category_label_for_slug() {
+  case "$1" in
+    wordpress-site-ops) printf 'WordPress Site Ops' ;;
+    automation-no-code) printf 'Automation No-Code' ;;
+    analytics-reporting) printf 'Analytics Reporting' ;;
+    creator-business-tooling) printf 'Creator Business Tooling' ;;
+    security-privacy) printf 'Security Privacy' ;;
+    ai-tool-comparisons) printf 'Tool Comparisons' ;;
+    ai-workflow-automation) printf 'Workflow Automation' ;;
+    ai-research-playbooks) printf 'Research Playbooks' ;;
+    ai-marketing-ops) printf 'Marketing Ops' ;;
+    ai-prompt-systems) printf 'Prompt Systems' ;;
+    *) printf '%s' "$1" | sed -E 's/-/ /g' ;;
+  esac
+}
+
+infer_category_slug() {
+  local text
+  text="$(printf '%s %s %s' "$slug" "$title" "$(jq -r '.target_keyword // ""' "$payload")" | tr '[:upper:]' '[:lower:]')"
+  case "$text" in
+    *wordpress*|*core-web-vitals*|*search-console*|*sitemap*|*seo-plugin*|*site-ops*) printf 'wordpress-site-ops' ;;
+    *zapier*|*make*|*n8n*|*automation*|*no-code*) printf 'automation-no-code' ;;
+    *analytics*|*reporting*|*ga4*|*dashboard*) printf 'analytics-reporting' ;;
+    *creator*|*business-tool*|*publishing-stack*) printf 'creator-business-tooling' ;;
+    *security*|*privacy*|*backup*|*hardening*) printf 'security-privacy' ;;
+    *comparison*|*alternatives*|*tool*) printf 'ai-tool-comparisons' ;;
+    *research*) printf 'ai-research-playbooks' ;;
+    *marketing*) printf 'ai-marketing-ops' ;;
+    *prompt*) printf 'ai-prompt-systems' ;;
+    *) printf 'ai-workflow-automation' ;;
+  esac
+}
+
+category_slug="$(jq -r '.category_slug // ""' "$payload")"
+category_name="$(jq -r '.category // ""' "$payload")"
+if [ -z "$category_slug" ] || [ "$category_slug" = "null" ]; then
+  if [ -n "$category_name" ] && [ "$category_name" != "null" ]; then
+    category_slug="$(slugify "$category_name")"
+  else
+    category_slug="$(infer_category_slug)"
+  fi
+fi
+if [ -z "$category_name" ] || [ "$category_name" = "null" ]; then
+  category_name="$(category_label_for_slug "$category_slug")"
+fi
+
 work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 content_file="$work_dir/post-content.html"
@@ -169,7 +221,11 @@ if [ "$dry_run" = true ]; then
   [ -n "$output_dir" ] || fail "missing --output-dir for --dry-run" 2
   mkdir -p "$output_dir"
   cp "$content_file" "$output_dir/post-content.html"
-  jq '{title, slug, status, meta_title, meta_description, source_urls, internal_links}' "$payload" >"$output_dir/publish-summary.json"
+  jq \
+    --arg category "$category_name" \
+    --arg category_slug "$category_slug" \
+    '{title, slug, status, meta_title, meta_description, source_urls, internal_links} + {category: $category, category_slug: $category_slug}' \
+    "$payload" >"$output_dir/publish-summary.json"
   echo "publish dry-run complete: rendered $output_dir/post-content.html"
   exit 0
 fi
@@ -197,12 +253,78 @@ title="$(jq -r '.title' "$payload")"
 slug="$(jq -r '.slug' "$payload")"
 excerpt="$(jq -r '.meta_description // ""' "$payload")"
 target_keyword="$(jq -r '.target_keyword // ""' "$payload")"
+category_slug="$(jq -r '.category_slug // ""' "$payload")"
+category_name="$(jq -r '.category // ""' "$payload")"
 meta_title="$(jq -r '.meta_title // ""' "$payload")"
 meta_description="$(jq -r '.meta_description // ""' "$payload")"
 update_policy="$(jq -r '.update_policy // ""' "$payload")"
 analysis_note="$(jq -r '.analysis_note // ""' "$payload")"
 source_urls="$(jq -r '.source_urls[]?' "$payload")"
 internal_links="$(jq -r '.internal_links[]?' "$payload")"
+
+slugify() {
+  printf '%s' "$1" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+category_label_for_slug() {
+  case "$1" in
+    wordpress-site-ops) printf 'WordPress Site Ops' ;;
+    automation-no-code) printf 'Automation No-Code' ;;
+    analytics-reporting) printf 'Analytics Reporting' ;;
+    creator-business-tooling) printf 'Creator Business Tooling' ;;
+    security-privacy) printf 'Security Privacy' ;;
+    ai-tool-comparisons) printf 'Tool Comparisons' ;;
+    ai-workflow-automation) printf 'Workflow Automation' ;;
+    ai-research-playbooks) printf 'Research Playbooks' ;;
+    ai-marketing-ops) printf 'Marketing Ops' ;;
+    ai-prompt-systems) printf 'Prompt Systems' ;;
+    *) printf '%s' "$1" | sed -E 's/-/ /g' ;;
+  esac
+}
+
+infer_category_slug() {
+  local text
+  text="$(printf '%s %s %s' "$slug" "$title" "$target_keyword" | tr '[:upper:]' '[:lower:]')"
+  case "$text" in
+    *wordpress*|*core-web-vitals*|*search-console*|*sitemap*|*seo-plugin*|*site-ops*) printf 'wordpress-site-ops' ;;
+    *zapier*|*make*|*n8n*|*automation*|*no-code*) printf 'automation-no-code' ;;
+    *analytics*|*reporting*|*ga4*|*dashboard*) printf 'analytics-reporting' ;;
+    *creator*|*business-tool*|*publishing-stack*) printf 'creator-business-tooling' ;;
+    *security*|*privacy*|*backup*|*hardening*) printf 'security-privacy' ;;
+    *comparison*|*alternatives*|*tool*) printf 'ai-tool-comparisons' ;;
+    *research*) printf 'ai-research-playbooks' ;;
+    *marketing*) printf 'ai-marketing-ops' ;;
+    *prompt*) printf 'ai-prompt-systems' ;;
+    *) printf 'ai-workflow-automation' ;;
+  esac
+}
+
+ensure_category() {
+  local name="$1"
+  local slug="$2"
+  local term_id
+  term_id="$(run_wp term list category --slug="$slug" --field=term_id 2>/dev/null | head -n 1 || true)"
+  if [ -z "$term_id" ]; then
+    term_id="$(run_wp term create category "$name" --slug="$slug" --porcelain)"
+  else
+    run_wp term update category "$term_id" --name="$name" --slug="$slug" >/dev/null
+  fi
+  printf '%s' "$term_id"
+}
+
+if [ -z "$category_slug" ] || [ "$category_slug" = "null" ]; then
+  if [ -n "$category_name" ] && [ "$category_name" != "null" ]; then
+    category_slug="$(slugify "$category_name")"
+  else
+    category_slug="$(infer_category_slug)"
+  fi
+fi
+if [ -z "$category_name" ] || [ "$category_name" = "null" ]; then
+  category_name="$(category_label_for_slug "$category_slug")"
+fi
+category_id="$(ensure_category "$category_name" "$category_slug")"
 
 existing_id="$(run_wp post list --post_type=post --name="$slug" --field=ID 2>/dev/null | head -n 1 || true)"
 if [ -z "$existing_id" ]; then
@@ -212,6 +334,7 @@ if [ -z "$existing_id" ]; then
     --post_name="$slug" \
     --post_title="$title" \
     --post_excerpt="$excerpt" \
+    --post_category="$category_id" \
     --post_content="$(cat "$content_file")" \
     --porcelain)"
   action="created"
@@ -221,6 +344,7 @@ else
     --post_status="$post_status" \
     --post_title="$title" \
     --post_excerpt="$excerpt" \
+    --post_category="$category_id" \
     --post_content="$(cat "$content_file")" >/dev/null
   action="updated"
 fi
@@ -228,6 +352,7 @@ fi
 run_wp post meta update "$post_id" _yolkmeet_source_urls "$source_urls" >/dev/null
 run_wp post meta update "$post_id" _yolkmeet_primary_keyword "$target_keyword" >/dev/null
 run_wp post meta update "$post_id" _yolkmeet_target_keyword "$target_keyword" >/dev/null
+run_wp post meta update "$post_id" _yolkmeet_category_slug "$category_slug" >/dev/null
 run_wp post meta update "$post_id" _yolkmeet_meta_title "$meta_title" >/dev/null
 run_wp post meta update "$post_id" _yolkmeet_meta_description "$meta_description" >/dev/null
 run_wp post meta update "$post_id" _yolkmeet_update_policy "$update_policy" >/dev/null

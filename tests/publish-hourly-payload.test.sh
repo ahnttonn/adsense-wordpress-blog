@@ -39,6 +39,7 @@ grep -Fq '<!-- wp:heading -->' "$content" || fail "rendered content missing head
 grep -Fq '<!-- wp:html -->' "$content" || fail "rendered content missing HTML block for table"
 grep -Fq '<table>' "$content" || fail "rendered content missing table"
 jq -e '.status == "draft" and .slug == "hourly-publishing-valid-draft"' "$summary" >/dev/null || fail "summary missing draft slug"
+jq -e '.category == "Workflow Automation" and .category_slug == "ai-workflow-automation"' "$summary" >/dev/null || fail "summary missing inferred category"
 
 if bash "$publish_script" --payload "$payload" --status private >"$tmp_dir/bad-status.out" 2>"$tmp_dir/bad-status.err"; then
   fail "unsupported status unexpectedly passed"

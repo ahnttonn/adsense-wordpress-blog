@@ -82,6 +82,21 @@ Codex runs the operator layer hourly: create one candidate, run the gates, and a
 
 Operator selection must follow the near-term pillar priority in `docs/content-pillar-map.md` for the next 20 approved candidates. Prefer WordPress/site ops, automation/no-code, analytics/reporting, creator/business tooling, and light security/privacy until those underrepresented non-AI pillars are materially represented; use AI tools only after that breadth requirement is satisfied or when no approved non-AI candidate can pass the gates.
 
+## Post-Publish Growth Queue
+
+After a candidate is published, automation may queue only policy-safe growth work. It must not generate proxy, VPN, refresh-bot, click-exchange, or manufactured-session traffic for AdSense or ranking manipulation.
+
+Allowed post-publish actions:
+
+- Confirm the published URL is present in `https://www.yolkmeet.com/sitemap.xml`.
+- Confirm IndexNow is enabled for future publish/update/delete events.
+- Record whether Bing Webmaster Tools and Search Console show discovered, indexed, crawled-not-indexed, or error states.
+- Queue title, meta description, introduction, answer-block, FAQ, and table rewrites when impressions rise but CTR or query fit is weak.
+- Add or queue internal links from relevant articles, category pages, and related-post blocks.
+- Add or queue original templates, checklists, tables, screenshots, source notes, or update logs when a page is too thin.
+- Draft human-readable social/community snippets for manual review, without spam posting, fake engagement, repeated self-referrals, or automated account activity.
+- Review server logs for suspicious referral bursts before treating any traffic lift as useful growth evidence.
+
 ## Approval Metadata
 
 `publishing_approval: "approved"` means the candidate is allowed to enter the automated operator queue. It does not bypass quality gates. Public promotion is allowed only after Codex/operator review, content quality, originality, SEO/AEO/GEO, and WP-CLI publish checks pass.

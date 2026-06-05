@@ -68,6 +68,12 @@ front_matter_list_json() {
   ' "$draft_file"
 }
 
+slugify() {
+  printf '%s' "$1" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
 json_string() {
   python3 -c 'import json, sys; print(json.dumps(sys.stdin.read()))'
 }
@@ -83,6 +89,9 @@ slug="$(front_matter_value slug)"
 target_keyword="$(front_matter_value target_keyword)"
 meta_title="$(front_matter_value meta_title)"
 meta_description="$(front_matter_value meta_description)"
+category="$(front_matter_value category)"
+category_slug=""
+[ -z "$category" ] || category_slug="$(slugify "$category")"
 update_policy="$(front_matter_value update_policy)"
 analysis_note="$(front_matter_value analysis_note)"
 
@@ -97,6 +106,8 @@ cat >"$payload" <<EOF
   "title":"$(printf '%s' "$title" | sed 's/\\/\\\\/g; s/"/\\"/g')",
   "slug":"$(printf '%s' "$slug" | sed 's/\\/\\\\/g; s/"/\\"/g')",
   "target_keyword":"$(printf '%s' "$target_keyword" | sed 's/\\/\\\\/g; s/"/\\"/g')",
+  "category":"$(printf '%s' "$category" | sed 's/\\/\\\\/g; s/"/\\"/g')",
+  "category_slug":"$(printf '%s' "$category_slug" | sed 's/\\/\\\\/g; s/"/\\"/g')",
   "meta_title":"$(printf '%s' "$meta_title" | sed 's/\\/\\\\/g; s/"/\\"/g')",
   "meta_description":"$(printf '%s' "$meta_description" | sed 's/\\/\\\\/g; s/"/\\"/g')",
   "update_policy":"$(printf '%s' "$update_policy" | sed 's/\\/\\\\/g; s/"/\\"/g')",

@@ -14,6 +14,10 @@
 - Articles refreshed:
 - Article decay watchlist:
 - Internal links added:
+- IndexNow/sitemap coverage for new URLs:
+- CTR/title/meta rewrites queued:
+- Thin-page expansion queued:
+- Community/social snippets prepared:
 - Refresh decisions:
 - Expand decisions:
 - Prune decisions:
@@ -30,6 +34,7 @@
 ## Monetization Readiness
 - AdSense readiness:
 - Invalid traffic review:
+- Artificial traffic/proxy/VPN risk:
 - Auto ads UX:
 - AdSense revenue blocker:
 - Consent/privacy follow-ups:
