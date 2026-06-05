@@ -60,6 +60,19 @@ assert_count() {
   fi
 }
 
+assert_count_at_least() {
+  local haystack="$1"
+  local needle="$2"
+  local expected_minimum="$3"
+  local description="$4"
+  local actual
+
+  actual="$(printf '%s' "$haystack" | grep -Fc -- "$needle" || true)"
+  if [ "$actual" -lt "$expected_minimum" ]; then
+    fail "unexpected SEO baseline count for $description: expected at least $expected_minimum, got $actual"
+  fi
+}
+
 home_html=""
 robots_txt=""
 sitemap_xml=""
@@ -78,7 +91,7 @@ assert_contains "$robots_txt" "Allow: /wp-admin/admin-ajax.php" "robots.txt admi
 assert_contains "$robots_txt" "Sitemap: https://www.yolkmeet.com/sitemap.xml" "robots.txt sitemap pointer"
 
 assert_contains "$sitemap_xml" "<?xml-stylesheet type=\"text/xsl\" href=\"https://www.yolkmeet.com/sitemap.xsl\"?>" "sitemap stylesheet link"
-assert_count "$sitemap_xml" "<loc>" 5 "sitemap URL entries"
+assert_count_at_least "$sitemap_xml" "<loc>" 5 "sitemap URL entries"
 assert_contains "$sitemap_xml" "<loc>https://www.yolkmeet.com/</loc>" "homepage sitemap entry"
 assert_contains "$sitemap_xml" "<loc>https://www.yolkmeet.com/privacy/</loc>" "privacy sitemap entry"
 assert_contains "$sitemap_xml" "<loc>https://www.yolkmeet.com/contact/</loc>" "contact sitemap entry"

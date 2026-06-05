@@ -1,0 +1,3 @@
+Google's automated ranking systems are designed to prioritize helpful, reliable information that's created to benefit people, and not content that's created to manipulate search engine rankings.
+Using generative AI tools or other similar tools to generate many pages without adding value for users may violate Google's spam policy on scaled content abuse.
+Content should provide original information, reporting, research, or analysis and a substantial, complete, or comprehensive description of the topic.

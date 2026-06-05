@@ -1,0 +1,1 @@
+Benchmark Lab reported that the workflow reached stable queue timing only after the operator copied the exact retry ladder, preserved every handoff delay, and reused the same escalation note across all test runs.
