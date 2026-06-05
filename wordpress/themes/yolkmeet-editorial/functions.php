@@ -64,7 +64,34 @@ function yolkmeet_editorial_adsense_verification(): void
 
     echo '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1424742974208042" crossorigin="anonymous"></script>' . "\n";
 }
-add_action('wp_head', 'yolkmeet_editorial_adsense_verification', 20);
+add_action('wp_head', 'yolkmeet_editorial_adsense_verification', 20); // adsense verification snippet in head
+
+function yolkmeet_editorial_ga4_measurement_id(): string
+{
+    $measurement_id = defined('YOLKMEET_GA4_MEASUREMENT_ID') ? (string) YOLKMEET_GA4_MEASUREMENT_ID : '';
+    if ($measurement_id === '') {
+        $measurement_id = (string) get_option('_yolkmeet_ga4_measurement_id', '');
+    }
+
+    return trim($measurement_id);
+}
+
+function yolkmeet_editorial_analytics(): void
+{
+    if (is_admin()) {
+        return;
+    }
+
+    $measurement_id = yolkmeet_editorial_ga4_measurement_id();
+    if ($measurement_id === '') {
+        return;
+    }
+
+    $measurement_id_js = wp_json_encode($measurement_id);
+    echo "<script async src=\"https://www.googletagmanager.com/gtag/js?id=" . esc_attr($measurement_id) . "\"></script>\n";
+    echo "<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', " . $measurement_id_js . ", { 'anonymize_ip': true, 'allow_google_signals': false, 'allow_ad_personalization_signals': false });</script>\n";
+}
+add_action('wp_head', 'yolkmeet_editorial_analytics', 21);
 
 function yolkmeet_editorial_excerpt(string $fallback = ''): string
 {
@@ -311,8 +338,8 @@ function yolkmeet_editorial_render_ad_slot(string $position, bool $mobile_safe =
     printf(
         '<aside class="%1$s" aria-label="%2$s"><span>%3$s</span></aside>',
         esc_attr($classes),
-        esc_attr__('Advertisement placeholder', 'yolkmeet-editorial'),
-        esc_html(sprintf(__('Advertisement reserved: %s', 'yolkmeet-editorial'), $position))
+        esc_attr__('Advertisement', 'yolkmeet-editorial'),
+        esc_html__('Advertisement', 'yolkmeet-editorial')
     );
 }
 
