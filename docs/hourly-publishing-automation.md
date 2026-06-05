@@ -82,6 +82,26 @@ Codex runs the operator layer hourly: create one candidate, run the gates, and a
 
 Operator selection must follow the near-term pillar priority in `docs/content-pillar-map.md` for the next 20 approved candidates. Prefer WordPress/site ops, automation/no-code, analytics/reporting, creator/business tooling, and light security/privacy until those underrepresented non-AI pillars are materially represented; use AI tools only after that breadth requirement is satisfied or when no approved non-AI candidate can pass the gates.
 
+## Source Discovery Fallback
+
+The operator should use existing local plans first: `docs/content-pillar-map.md`, the launch manifest, and any queue items already staged or ready. If those sources are exhausted, duplicated, stale, or cannot produce a candidate that passes gates, the operator may perform bounded source discovery for one new topic.
+
+Allowed discovery sources:
+
+- official product, vendor, and platform documentation
+- changelogs, release notes, pricing or feature pages that are public and attributable
+- WordPress plugin and documentation pages
+- Google, Bing, and search-engine documentation
+- public primary sources that can be cited as source URLs
+
+Discovery constraints:
+
+- Do not copy, paraphrase, or rewrite competitor article bodies.
+- Do not use scraped copyrighted prose, paid content, or SERP snippets as article substance.
+- Respect robots.txt, terms, and rate limits.
+- Use crawling to identify source URLs, factual claims to verify, topic gaps, and update triggers only.
+- The final article must be original Yolkmeet analysis with `source_urls`, source notes, answer structure, and no unsupported private testing claims.
+
 ## Post-Publish Growth Queue
 
 After a candidate is published, automation may queue only policy-safe growth work. It must not generate proxy, VPN, refresh-bot, click-exchange, or manufactured-session traffic for AdSense or ranking manipulation.
