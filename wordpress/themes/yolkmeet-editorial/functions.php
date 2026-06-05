@@ -80,6 +80,72 @@ function yolkmeet_editorial_excerpt(string $fallback = ''): string
     return wp_trim_words(wp_strip_all_tags(get_the_content()), 32);
 }
 
+function yolkmeet_editorial_post_source_urls(int $post_id = 0): array
+{
+    $post_id = $post_id > 0 ? $post_id : get_the_ID();
+    $raw_urls = (string) get_post_meta($post_id, '_yolkmeet_source_urls', true);
+    if ($raw_urls === '') {
+        return [];
+    }
+
+    $urls = preg_split('/[\r\n,]+/', $raw_urls) ?: [];
+    $clean_urls = [];
+    foreach ($urls as $url) {
+        $clean_url = esc_url_raw(trim($url));
+        if ($clean_url !== '') {
+            $clean_urls[$clean_url] = $clean_url;
+        }
+    }
+
+    return array_values($clean_urls);
+}
+
+function yolkmeet_editorial_faq_items(): array
+{
+    $title = wp_strip_all_tags(get_the_title());
+    $summary = yolkmeet_editorial_excerpt(__('Use this article to make the first decision, then verify the assumptions and source notes before adopting the workflow.', 'yolkmeet-editorial'));
+
+    return [
+        [
+            'question' => sprintf(__('What is the fastest way to use %s?', 'yolkmeet-editorial'), $title),
+            'answer' => $summary,
+        ],
+        [
+            'question' => __('What should readers verify before copying the workflow?', 'yolkmeet-editorial'),
+            'answer' => __('Check the source URLs, rerun the workflow with your own inputs, and record any pricing, policy, or tool changes that affect the recommendation.', 'yolkmeet-editorial'),
+        ],
+        [
+            'question' => __('How does Yolkmeet keep the guide current?', 'yolkmeet-editorial'),
+            'answer' => __('Each guide keeps a visible update note so changed assumptions, retests, and source revisions can be reviewed without hiding the editorial history.', 'yolkmeet-editorial'),
+        ],
+    ];
+}
+
+function yolkmeet_editorial_meta_description(): void
+{
+    if (!is_singular(['post', 'page'])) {
+        return;
+    }
+
+    printf(
+        '<meta name="description" content="%s">' . "\n",
+        esc_attr(wp_trim_words(yolkmeet_editorial_excerpt(), 28, '...'))
+    );
+}
+add_action('wp_head', 'yolkmeet_editorial_meta_description', 2);
+
+function yolkmeet_editorial_robots(array $robots): array
+{
+    if (is_singular('post')) {
+        $robots['max-snippet'] = -1;
+        $robots['max-image-preview'] = 'large';
+        $robots['max-video-preview'] = -1;
+    }
+
+    return $robots;
+}
+add_filter('wp_robots', 'yolkmeet_editorial_robots');
+
 function yolkmeet_editorial_primary_category_name(): string
 {
     $categories = get_the_category();
@@ -120,6 +186,113 @@ function yolkmeet_editorial_breadcrumbs(): void
         implode('<span aria-hidden="true">/</span>', $items)
     );
 }
+
+function yolkmeet_editorial_breadcrumb_schema(): array
+{
+    $items = [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => get_bloginfo('name'),
+            'item' => home_url('/'),
+        ],
+    ];
+
+    $position = 2;
+    $category = get_the_category()[0] ?? null;
+    if ($category instanceof WP_Term) {
+        $items[] = [
+            '@type' => 'ListItem',
+            'position' => $position,
+            'name' => $category->name,
+            'item' => get_category_link($category),
+        ];
+        $position++;
+    }
+
+    $items[] = [
+        '@type' => 'ListItem',
+        'position' => $position,
+        'name' => wp_strip_all_tags(get_the_title()),
+        'item' => get_permalink(),
+    ];
+
+    return [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => $items,
+    ];
+}
+
+function yolkmeet_editorial_article_schema(): void
+{
+    if (!is_singular('post')) {
+        return;
+    }
+
+    $post_id = get_the_ID();
+    $author_id = (int) get_post_field('post_author', $post_id);
+    $source_urls = yolkmeet_editorial_post_source_urls($post_id);
+    $article = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BlogPosting',
+        'mainEntityOfPage' => [
+            '@type' => 'WebPage',
+            '@id' => get_permalink($post_id),
+        ],
+        'headline' => wp_strip_all_tags(get_the_title($post_id)),
+        'description' => yolkmeet_editorial_excerpt(),
+        'datePublished' => get_the_date(DATE_W3C, $post_id),
+        'dateModified' => get_the_modified_date(DATE_W3C, $post_id),
+        'author' => [
+            '@type' => 'Person',
+            'name' => get_the_author_meta('display_name', $author_id) ?: get_bloginfo('name'),
+        ],
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => get_bloginfo('name'),
+            'url' => home_url('/'),
+        ],
+        'articleSection' => yolkmeet_editorial_primary_category_name(),
+        'isAccessibleForFree' => true,
+    ];
+
+    if (has_post_thumbnail($post_id)) {
+        $image_url = get_the_post_thumbnail_url($post_id, 'full');
+        if ($image_url !== false) {
+            $article['image'] = [$image_url];
+        }
+    }
+
+    if ($source_urls !== []) {
+        $article['citation'] = $source_urls;
+    }
+
+    $faq_entities = [];
+    foreach (yolkmeet_editorial_faq_items() as $item) {
+        $faq_entities[] = [
+            '@type' => 'Question',
+            'name' => $item['question'],
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => $item['answer'],
+            ],
+        ];
+    }
+
+    $schema_graph = [
+        $article,
+        yolkmeet_editorial_breadcrumb_schema(),
+        [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => $faq_entities,
+        ],
+    ];
+
+    echo '<script type="application/ld+json">' . wp_json_encode($schema_graph, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+}
+add_action('wp_head', 'yolkmeet_editorial_article_schema', 12);
 
 function yolkmeet_editorial_reading_time(): string
 {

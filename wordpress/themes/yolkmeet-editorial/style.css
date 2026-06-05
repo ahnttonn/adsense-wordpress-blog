@@ -369,6 +369,29 @@ p {
   font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.toc {
+  margin: 24px 0;
+  padding: 16px 18px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.toc h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.toc ol {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+}
+
 .article-content {
   max-width: var(--article-width);
   overflow-wrap: anywhere;
@@ -492,6 +515,52 @@ pre code {
   font-size: 20px;
 }
 
+.citation-list {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding-left: 20px;
+  overflow-wrap: anywhere;
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.source-note__empty {
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.faq-block {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0;
+  padding: 18px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.faq-block h2 {
+  margin-bottom: 4px;
+}
+
+.faq-block details {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.faq-block summary {
+  cursor: pointer;
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 700;
+}
+
+.faq-block p {
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+}
+
 .search-form {
   display: flex;
   gap: 8px;
@@ -606,11 +675,12 @@ button {
     font-size: 19px;
   }
 
-.story-card,
+  .story-card,
   .rail-panel,
   .callout,
   .author-box,
   .source-note,
+  .faq-block,
   .update-log,
   .related-posts {
     padding: 14px;
