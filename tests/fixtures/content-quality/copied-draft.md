@@ -18,3 +18,5 @@ status: "draft"
 # Copied Automation Draft
 
 Workflow automation articles should explain the job to be done before recommending tools, describe the source notes that informed each decision, and give readers a verification step they can repeat before publishing or buying software.
+
+Launch content must separate source-derived observations from original testing notes, record when pricing or feature claims need review, and avoid copying benchmark prose into the final article draft.
