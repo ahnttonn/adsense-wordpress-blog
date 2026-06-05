@@ -1,0 +1,239 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WP_ROOT="${WP_ROOT:-/var/www/yolkmeet.com}"
+WP_USER="${WP_USER:-wpdeploy}"
+SITE_URL="${SITE_URL:-https://www.yolkmeet.com}"
+ADSENSE_PUBLISHER_ID="${ADSENSE_PUBLISHER_ID:-}"
+APPLICATION_BOUNDARY="AdSense application is account-gated"
+TRUST_PAGE_SLUGS=("about" "contact" "privacy-policy" "terms" "editorial-policy" "ai-use-policy" "affiliate-disclosure" "cookie-policy")
+FOOTER_PAGE_SLUGS=("privacy-policy" "terms" "editorial-policy" "ai-use-policy" "affiliate-disclosure" "cookie-policy")
+
+usage() {
+  cat <<'EOF'
+Usage: configure-adsense-approval-package.sh
+
+Publishes the fixed Yolkmeet trust-page set and navigation required for
+AdSense readiness. This script accepts no page slug or title arguments.
+
+Optional environment:
+  WP_ROOT=/var/www/yolkmeet.com
+  WP_USER=wpdeploy
+  SITE_URL=https://www.yolkmeet.com
+  ADSENSE_PUBLISHER_ID=pub-0000000000000000
+EOF
+}
+
+reject_unsupported_args() {
+  if [ "$#" -eq 0 ]; then
+    return
+  fi
+
+  usage >&2
+  printf 'Unsupported input: page slugs and titles are fixed for Task 9 trust pages.\n' >&2
+  exit 2
+}
+
+wp_cli() {
+  if command -v sudo >/dev/null 2>&1 && id "$WP_USER" >/dev/null 2>&1 && [ "$(id -un)" != "$WP_USER" ]; then
+    sudo -u "$WP_USER" wp --path="$WP_ROOT" "$@"
+  else
+    wp --path="$WP_ROOT" "$@"
+  fi
+}
+
+ensure_page() {
+  local title="$1"
+  local slug="$2"
+  local content="$3"
+  local existing_id
+
+  existing_id="$(wp_cli post list --post_type=page --name="$slug" --format=ids 2>/dev/null | awk '{ print $1; exit }' || true)"
+  if [ -n "$existing_id" ]; then
+    wp_cli post update "$existing_id" \
+      --post_title="$title" \
+      --post_name="$slug" \
+      --post_content="$content" \
+      --post_status=publish >/dev/null
+  else
+    wp_cli post create \
+      --post_type=page \
+      --post_title="$title" \
+      --post_name="$slug" \
+      --post_content="$content" \
+      --post_status=publish >/dev/null
+  fi
+}
+
+page_content() {
+  local slug="$1"
+
+  case "$slug" in
+    "about")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet publishes English-first practical AI automation guides, tool comparisons, prompt workflows, and source-aware editorial notes for operators, creators, and small teams.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Our articles are built around clear decisions, source URLs, review notes, and update logs so readers can verify the assumptions before adopting a workflow.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "contact")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Send corrections, source updates, disclosure questions, and partnership inquiries to <a href="mailto:editor@yolkmeet.com">editor@yolkmeet.com</a>.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>For article corrections, include the page URL, the claim that should be reviewed, and the source that supports the change. We review corrections before changing published guidance.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "privacy-policy")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet collects only the information needed to operate the publication, respond to reader messages, measure site performance, and maintain security. If you email editor@yolkmeet.com, we receive the information you choose to send.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>The site may use privacy-conscious analytics, server logs, security tooling, affiliate disclosures, and Google advertising technologies after approval. Advertising partners may use cookies or similar technologies to measure ad delivery and prevent invalid activity.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>We do not sell reader contact details. Readers can request correction or deletion of direct contact messages by emailing editor@yolkmeet.com.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "terms")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet provides editorial information about AI tools, automation workflows, and productivity systems. The content is for general informational use and is not legal, financial, medical, or professional advice.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Readers are responsible for checking pricing, product terms, security requirements, and compliance obligations before adopting any workflow. Tool availability and policies can change after publication.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Do not misuse this site, attempt to bypass security controls, scrape pages in a way that disrupts service, or submit unlawful material through contact channels.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "editorial-policy")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet editorial policy starts with a reader problem, then records source URLs, source notes, decision criteria, caveats, and an update policy. We prioritize official documentation, public product pages, and reproducible workflow evidence over broad unsupported claims.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Competitor pages may be used for market research, search intent mapping, and format benchmarking, but their article bodies are not copied into publishable drafts.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>AI-assisted drafts are reviewed for usefulness, copied-body risk, unsupported claims, internal links, corrections, and review status before publication. We avoid fake freshness, invented citations, and claims of firsthand testing unless a real test artifact exists.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>When a material error is found, we review the source, update the article, and keep the update log visible where the article template supports it.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "ai-use-policy")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet may use AI systems to help research public sources, organize outlines, draft first passes, compare wording, and check internal consistency. AI output is not treated as a source of truth.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Published articles must preserve source URLs, source notes, editorial review, and update assumptions. We do not intentionally publish copied article bodies, fabricated citations, or unsupported product claims generated by automation.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Readers should verify tool behavior in their own accounts because AI products, pricing, and policy details can change quickly.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "affiliate-disclosure")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet may earn compensation from affiliate links, sponsorships, or advertising in the future. Affiliate links may earn a commission, but affiliate relationships do not control editorial recommendations or remove the requirement for source-aware analysis, caveats, and editorial review.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>When an article contains affiliate links or sponsored material, the disclosure should appear near the relevant content or in a clearly visible disclosure area. Recommendations should remain based on reader fit, workflow evidence, and published source information.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    "cookie-policy")
+      cat <<'EOF'
+<!-- wp:paragraph --><p>Yolkmeet may use cookies or similar technologies for site security, basic preferences, analytics, affiliate measurement, and advertising after approval. Advertising cookies may be used by Google AdSense after approval to help measure ad delivery and prevent invalid traffic.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Readers can control cookies through browser settings. If additional consent tooling becomes required for a region or advertising partner, Yolkmeet will update this page and the site interface before relying on that consent path.</p><!-- /wp:paragraph -->
+EOF
+      ;;
+    *)
+      echo "Unknown trust page slug: $slug" >&2
+      exit 1
+      ;;
+  esac
+}
+
+page_title() {
+  local slug="$1"
+
+  case "$slug" in
+    "about") printf 'About' ;;
+    "contact") printf 'Contact' ;;
+    "privacy-policy") printf 'Privacy Policy' ;;
+    "terms") printf 'Terms of Use' ;;
+    "editorial-policy") printf 'Editorial Policy' ;;
+    "ai-use-policy") printf 'AI Use Policy' ;;
+    "affiliate-disclosure") printf 'Affiliate Disclosure' ;;
+    "cookie-policy") printf 'Cookie Policy' ;;
+    *)
+      echo "Unknown trust page slug: $slug" >&2
+      exit 1
+      ;;
+  esac
+}
+
+ensure_trust_pages() {
+  local slug
+
+  for slug in "${TRUST_PAGE_SLUGS[@]}"; do
+    ensure_page "$(page_title "$slug")" "$slug" "$(page_content "$slug")"
+  done
+}
+
+delete_managed_menus() {
+  local menu_ids
+  local menu_id
+  local menu_slug
+  for menu_slug in primary topics footer; do
+    menu_ids="$(wp_cli menu list --format=csv | awk -F, -v slug="$menu_slug" 'NR > 1 && $3 == slug {print $1}')"
+    for menu_id in $menu_ids; do
+      wp_cli menu delete "$menu_id" >/dev/null || true
+    done
+  done
+}
+
+page_id_by_slug() {
+  wp_cli post list --post_type=page --name="$1" --format=ids | awk '{ print $1; exit }'
+}
+
+category_id_by_slug() {
+  wp_cli term list category --slug="$1" --format=ids | awk '{ print $1; exit }'
+}
+
+configure_nav() {
+  local menu_id topics_id footer_id
+  local category_id
+  local footer_slug
+
+  delete_managed_menus
+
+  menu_id="$(wp_cli menu create Primary --porcelain)"
+  wp_cli menu item add-post "$menu_id" "$(page_id_by_slug about)" --title=About >/dev/null
+  wp_cli menu item add-post "$menu_id" "$(page_id_by_slug contact)" --title=Contact >/dev/null
+  wp_cli menu location assign "$menu_id" primary >/dev/null
+
+  topics_id="$(wp_cli menu create Topics --porcelain)"
+  category_id="$(category_id_by_slug ai-workflow-automation)"
+  if [ -n "$category_id" ]; then
+    wp_cli menu item add-term "$topics_id" category "$category_id" --title="AI Workflow Automation" >/dev/null
+  fi
+  wp_cli menu location assign "$topics_id" topics >/dev/null
+
+  footer_id="$(wp_cli menu create Footer --porcelain)"
+  for footer_slug in "${FOOTER_PAGE_SLUGS[@]}"; do
+    wp_cli menu item add-post "$footer_id" "$(page_id_by_slug "$footer_slug")" --title="$(page_title "$footer_slug")" >/dev/null
+  done
+  wp_cli menu location assign "$footer_id" footer >/dev/null
+}
+
+configure_ads_txt_readiness() {
+  local ads_txt_path="$WP_ROOT/ads.txt"
+
+  if [ "$ADSENSE_PUBLISHER_ID" = "" ]; then
+    printf 'ads.txt readiness: ADSENSE_PUBLISHER_ID not provided; no ads.txt changes made before user-owned account approval\n'
+    return
+  fi
+
+  if ! printf '%s' "$ADSENSE_PUBLISHER_ID" | grep -Eq '^pub-[0-9]{16}$'; then
+    printf 'Invalid ADSENSE_PUBLISHER_ID: expected pub- followed by 16 digits\n' >&2
+    exit 1
+  fi
+
+  printf 'google.com, %s, DIRECT, f08c47fec0942fa0\n' "$ADSENSE_PUBLISHER_ID" >"$ads_txt_path"
+  printf 'ads.txt readiness: wrote %s for Google AdSense publisher ID\n' "$ads_txt_path"
+}
+
+purge_fastcgi_cache() {
+  if [ -d /var/cache/nginx/yolkmeet ]; then
+    find /var/cache/nginx/yolkmeet -type f -delete
+  fi
+}
+
+main() {
+  reject_unsupported_args "$@"
+  ensure_trust_pages
+  configure_nav
+  configure_ads_txt_readiness
+  purge_fastcgi_cache
+  wp_cli cache flush >/dev/null 2>&1 || true
+  printf 'AdSense approval package configured for %s\n' "$SITE_URL"
+  printf '%s\n' "$APPLICATION_BOUNDARY"
+}
+
+main "$@"
