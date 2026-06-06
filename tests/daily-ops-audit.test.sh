@@ -51,12 +51,23 @@ if [ -f "$doc" ]; then
   require_pattern "$doc" 'create an ULW plan only if' "plan-only escalation"
   require_pattern "$doc" 'must not mutate WordPress' "no production mutation"
   require_pattern "$doc" 'content/distribution-queue/ready' "distribution brief review queue"
+  require_pattern "$doc" 'Search Visibility Watch' "search visibility watch section"
+  require_pattern "$doc" 'Search Console and Bing Webmaster Tools' "official search tools boundary"
+  require_pattern "$doc" 'must not scrape search result pages' "no SERP scraping boundary"
 fi
 
 if [ -f "$script" ]; then
-  forbid_pattern "$script" 'wp post update|wp post create|wp option update|publish-hourly-payload|git push|git commit' "mutation command in read-only audit"
+  forbid_pattern "$script" 'wp post update|wp post create|wp option update|publish-hourly-payload|git push|git commit|google\.com/search|bing\.com/search|SERP scrape' "mutation or SERP scraping command in read-only audit"
   YOLKMEET_DAILY_OPS_SKIP_HTTP=1 YOLKMEET_DAILY_OPS_EVIDENCE_DIR="$tmp_dir/evidence" bash "$script" >"$tmp_dir/run.out" 2>"$tmp_dir/run.err" || fail "daily ops audit script failed"
   find "$tmp_dir/evidence" -type f -name '*summary.md' -print -quit | grep -q . || fail "daily ops summary evidence missing"
+  search_watch_file="$(find "$tmp_dir/evidence" -type f -name '*search-visibility-watch.md' -print -quit)"
+  [ -n "$search_watch_file" ] || fail "search visibility watch evidence missing"
+  if [ -n "$search_watch_file" ]; then
+    require_pattern "$search_watch_file" 'site:yolkmeet\.com' "site search spot-check query"
+    require_pattern "$search_watch_file" 'Search Console URL Inspection' "Google inspection reminder"
+    require_pattern "$search_watch_file" 'Bing URL Inspection' "Bing inspection reminder"
+    require_pattern "$search_watch_file" 'Do not automate repeated search-result scraping' "no repeated SERP scraping reminder"
+  fi
   grep -Fq 'HTTP checks skipped by YOLKMEET_DAILY_OPS_SKIP_HTTP=1' "$tmp_dir/run.out" || fail "skip-http mode not observable"
 fi
 

@@ -28,6 +28,33 @@ http_head() {
   curl -i --max-time 20 "$url" >"$output" 2>&1 || true
 }
 
+write_search_visibility_watch() {
+  local output="$1"
+  {
+    printf '# Search Visibility Watch\n\n'
+    printf 'Use official account data as the source of truth, then record a small manual search spot-check.\n\n'
+    printf '## Official tools\n\n'
+    printf -- '- Search Console URL Inspection: check the newest published URLs for Google indexing status, crawlability, canonical, and page fetch issues.\n'
+    printf -- '- Bing URL Inspection: check the newest published URLs for Bing index status, crawl issues, SEO issues, and markup issues.\n'
+    printf -- '- Bing IndexNow: confirm recent publish/update activity is visible in Bing Webmaster Tools when submissions are enabled.\n\n'
+    printf '## Manual search spot-check queries\n\n'
+    printf -- '- site:yolkmeet.com\n'
+    printf -- '- site:yolkmeet.com "YOLKMEET"\n'
+    printf -- '- site:yolkmeet.com "Operator-tech field guides"\n'
+    find "$repo_root/content/hourly-queue/processed" "$repo_root/content/hourly-queue/ready" \
+      -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort -r | head -n 5 | while IFS= read -r candidate; do
+        title="$(sed -n 's/^title:[[:space:]]*"\(.*\)"[[:space:]]*$/\1/p' "$candidate" | head -n 1)"
+        if [ -n "$title" ]; then
+          printf -- '- site:yolkmeet.com "%s"\n' "$title"
+        fi
+      done
+    printf '\n## Guardrails\n\n'
+    printf -- '- Do not automate repeated search-result scraping. Use this file as a manual checklist unless an approved search API is configured later.\n'
+    printf -- '- Do not treat a missing search result as a content failure on the first day. Inspect the URL in Search Console and Bing Webmaster Tools first.\n'
+    printf -- '- If a URL is missing after repeated official-tool checks, create a bounded ULW plan before changing content, sitemap, canonical, robots, or IndexNow behavior.\n'
+  } >"$output"
+}
+
 {
   write_count "$repo_root/content/hourly-queue/ready" "hourly_ready"
   write_count "$repo_root/content/hourly-queue/processed" "hourly_processed"
@@ -45,6 +72,7 @@ else
 fi
 
 find "$repo_root/content/distribution-queue/ready" -maxdepth 1 -type f ! -name '.gitkeep' 2>/dev/null | sort >"$evidence_dir/$today-distribution-ready-files.txt" || true
+write_search_visibility_watch "$evidence_dir/$today-search-visibility-watch.md"
 
 http_head "$base_url/" "$evidence_dir/$today-homepage-http.txt"
 http_head "$base_url/sitemap.xml" "$evidence_dir/$today-sitemap-http.txt"
@@ -59,6 +87,7 @@ http_head "$base_url/privacy/" "$evidence_dir/$today-privacy-http.txt"
   printf -- '- Queue counts: `%s`\n' "$evidence_dir/$today-queue-counts.txt"
   printf -- '- Cron log tail: `%s`\n' "$evidence_dir/$today-hourly-cron-log-tail.txt"
   printf -- '- Distribution ready files: `%s`\n' "$evidence_dir/$today-distribution-ready-files.txt"
+  printf -- '- Search visibility watch: `%s`\n' "$evidence_dir/$today-search-visibility-watch.md"
   printf -- '- Homepage HTTP: `%s`\n' "$evidence_dir/$today-homepage-http.txt"
   printf -- '- Sitemap HTTP: `%s`\n' "$evidence_dir/$today-sitemap-http.txt"
   printf -- '- Robots HTTP: `%s`\n' "$evidence_dir/$today-robots-http.txt"

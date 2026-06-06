@@ -28,6 +28,21 @@ Evidence is written under:
 - Review invalid-traffic and artificial-traffic policy terms in docs.
 - Verify no manual ad slots or visible ad placeholders were introduced.
 - List growth briefs awaiting manual review in `content/distribution-queue/ready`.
+- Write a Search Visibility Watch artifact with official-tool checks and a small manual search spot-check query list.
+
+## Search Visibility Watch
+
+Search visibility should be checked with Search Console and Bing Webmaster Tools as the source of truth. Use Google Search Console URL Inspection for URL-level Google indexing status, crawlability, canonical, and fetch issues. Use Bing URL Inspection for Bing index status, crawl issues, SEO issues, and markup issues. Use Bing Webmaster Tools IndexNow reporting when IndexNow submissions are enabled.
+
+The daily audit writes a manual checklist with queries such as:
+
+```text
+site:yolkmeet.com
+site:yolkmeet.com "YOLKMEET"
+site:yolkmeet.com "Exact article title"
+```
+
+The audit must not scrape search result pages, run repeated automated search queries, or treat a missing result on the first day as a content failure. If a URL is missing after repeated official-tool checks, create a bounded ULW plan before changing content, sitemap, canonical, robots, or IndexNow behavior.
 
 ## Escalation Rules
 
