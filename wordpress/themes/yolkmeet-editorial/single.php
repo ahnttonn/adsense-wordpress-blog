@@ -11,7 +11,7 @@
         </header>
         <section id="quick-answer" class="quick-answer">
             <strong><?php esc_html_e('Quick answer', 'yolkmeet-editorial'); ?></strong>
-            <p><?php echo esc_html(yolkmeet_editorial_excerpt(__('This guide summarizes the practical decision first, then shows the evidence and workflow details.', 'yolkmeet-editorial'))); ?></p>
+            <p><?php echo esc_html(yolkmeet_editorial_excerpt(__('This guide starts with the practical answer, then shows the checks and steps behind it.', 'yolkmeet-editorial'))); ?></p>
         </section>
         <nav class="toc" aria-label="<?php esc_attr_e('Table of contents', 'yolkmeet-editorial'); ?>">
             <h2><?php esc_html_e('Table of contents', 'yolkmeet-editorial'); ?></h2>
@@ -28,11 +28,11 @@
         </div>
         <section class="author-box">
             <h2><?php esc_html_e('Author and review note', 'yolkmeet-editorial'); ?></h2>
-            <p><?php esc_html_e('By the YOLKMEET editorial desk. Reviewed for workflow clarity, source notes, and update assumptions before publication.', 'yolkmeet-editorial'); ?></p>
+            <p><?php esc_html_e('By the YOLKMEET editorial desk. We keep source links and update notes visible so readers can check the guidance before using it.', 'yolkmeet-editorial'); ?></p>
         </section>
         <section id="source-notes" class="source-note">
             <h2><?php esc_html_e('Source notes', 'yolkmeet-editorial'); ?></h2>
-            <p><?php esc_html_e('Every guide should preserve tested inputs, source URLs, and assumptions so readers can verify the workflow before adopting it.', 'yolkmeet-editorial'); ?></p>
+            <p><?php esc_html_e('These links show what the article relies on, so you can recheck the guidance before using it in your own workflow.', 'yolkmeet-editorial'); ?></p>
             <?php $source_urls = yolkmeet_editorial_post_source_urls(); ?>
             <?php if ($source_urls !== []) : ?>
                 <ul class="citation-list">
@@ -58,7 +58,7 @@
             <p>
                 <?php
                 printf(
-                    esc_html__('Launch baseline created with public crawler access and AdSense verification in place. Last WordPress update: %s. Future updates should record tool changes, pricing shifts, and retested steps.', 'yolkmeet-editorial'),
+                    esc_html__('Published with public crawler access and AdSense verification in place. Last WordPress update: %s. Future updates will note tool, pricing, source, or workflow changes.', 'yolkmeet-editorial'),
                     esc_html(get_the_modified_date('M j, Y'))
                 );
                 ?>
@@ -81,7 +81,7 @@
     <aside class="article-rail">
         <section class="rail-panel">
             <h2><?php esc_html_e('Reading map', 'yolkmeet-editorial'); ?></h2>
-            <p><?php esc_html_e('Decision, setup notes, comparison table, source notes, and next actions.', 'yolkmeet-editorial'); ?></p>
+            <p><?php esc_html_e('Start with the quick answer, then use the source notes and FAQs to decide whether the workflow fits your site or stack.', 'yolkmeet-editorial'); ?></p>
         </section>
     </aside>
 </article>

@@ -9,7 +9,7 @@ $operator_topics = [
     [
         'slug' => 'ai-workflow-automation',
         'label' => __('Workflow Automation', 'yolkmeet-editorial'),
-        'description' => __('Repeatable systems, review gates, and operator-ready automation stacks.', 'yolkmeet-editorial'),
+        'description' => __('Repeatable systems, approval steps, and practical automation stacks.', 'yolkmeet-editorial'),
     ],
     [
         'slug' => 'ai-research-playbooks',
@@ -24,7 +24,7 @@ $operator_topics = [
     [
         'slug' => 'ai-prompt-systems',
         'label' => __('Prompt Systems', 'yolkmeet-editorial'),
-        'description' => __('Reusable prompt libraries, QA patterns, and review-ready templates.', 'yolkmeet-editorial'),
+        'description' => __('Reusable prompt libraries, checking patterns, and ready-to-use templates.', 'yolkmeet-editorial'),
     ],
 ];
 ?>
@@ -74,7 +74,7 @@ $operator_topics = [
             </ul>
         <?php else : ?>
             <article class="lead-story">
-                <p class="eyebrow"><?php esc_html_e('Launch desk', 'yolkmeet-editorial'); ?></p>
+                <p class="eyebrow"><?php esc_html_e('Coming soon', 'yolkmeet-editorial'); ?></p>
                 <h1><?php esc_html_e('Operator-tech guides are being prepared.', 'yolkmeet-editorial'); ?></h1>
                 <p class="dek"><?php esc_html_e('YOLKMEET tracks source-aware operator-tech guides, automation playbooks, and workflow comparisons.', 'yolkmeet-editorial'); ?></p>
             </article>

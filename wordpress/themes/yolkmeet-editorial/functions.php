@@ -331,10 +331,9 @@ function yolkmeet_editorial_reading_time(): string
 function yolkmeet_editorial_post_meta(): void
 {
     printf(
-        '<div class="post-meta"><span>%1$s</span><span>%2$s</span><span>%3$s</span></div>',
+        '<div class="post-meta"><span>%1$s</span><span>%2$s</span></div>',
         esc_html(get_the_date('M j, Y')),
-        esc_html(yolkmeet_editorial_reading_time()),
-        esc_html__('Tested editorial format', 'yolkmeet-editorial')
+        esc_html(yolkmeet_editorial_reading_time())
     );
 }
 
