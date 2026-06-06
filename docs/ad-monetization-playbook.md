@@ -4,7 +4,7 @@ Generated: 2026-06-06
 
 ## Decision
 
-Yolkmeet uses an AdSense-only monetization model. Auto ads are the default and only active ad delivery path in this plan. Affiliate rollout, sponsored content rollout, template product funnels, lead magnet monetization, paid placements, and manual ad-unit optimization are out of scope.
+YOLKMEET uses an AdSense-only monetization model. Auto ads are the default and only active ad delivery path in this plan. Affiliate rollout, sponsored content rollout, template product funnels, lead magnet monetization, paid placements, and manual ad-unit optimization are out of scope.
 
 The existing AdSense verification and Auto ads script uses client `ca-pub-1424742974208042` and is emitted through `wp_head`, so it appears inside the document `<head>` on WordPress-rendered pages. The repository must keep that head script available for AdSense review and Auto ads operation while enforcing no live ad units before approval.
 
@@ -32,7 +32,7 @@ Repository work owns:
 
 ## Auto Ads Only
 
-Auto ads only means Google chooses eligible placements after approval, while Yolkmeet controls the surrounding reading experience. The theme should reserve clean article rhythm, but it should not hard-code live units. After approval, use the AdSense dashboard to review formats and exclusions before adding any theme-side behavior.
+Auto ads only means Google chooses eligible placements after approval, while YOLKMEET controls the surrounding reading experience. The theme should reserve clean article rhythm, but it should not hard-code live units. After approval, use the AdSense dashboard to review formats and exclusions before adding any theme-side behavior.
 
 Post-approval placement QA must check:
 
@@ -60,7 +60,7 @@ If invalid traffic signals appear, pause traffic pushes, document the anomaly, a
 
 ## EU User Consent And CMP
 
-If Yolkmeet serves ads to users in the EEA, UK, or Switzerland, the site owner must ensure EU user consent policy handling is in place. Treat consent/CMP configuration as account-gated until the owner confirms the AdSense account-side setup and the live cookie/consent behavior.
+If YOLKMEET serves ads to users in the EEA, UK, or Switzerland, the site owner must ensure EU user consent policy handling is in place. Treat consent/CMP configuration as account-gated until the owner confirms the AdSense account-side setup and the live cookie/consent behavior.
 
 Repository checks should keep the Privacy Policy and Cookie Policy aligned with:
 

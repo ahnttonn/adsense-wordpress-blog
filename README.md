@@ -1,6 +1,6 @@
 # AdSense WordPress Blog
 
-Project repository for the English-first AI tools and automation WordPress publication.
+YOLKMEET is an operator-tech publication for automation playbooks, workflow comparisons, site operations, analytics/reporting, creator/business tooling, prompt systems, and source-aware AI tool coverage.
 
 ## Scope
 - WordPress theme/configuration notes.
@@ -16,6 +16,7 @@ Project repository for the English-first AI tools and automation WordPress publi
 - [`docs/ad-monetization-playbook.md`](docs/ad-monetization-playbook.md): Auto ads, no live manual units before approval, consent/CMP, and invalid-traffic rules.
 - [`docs/hourly-publishing-automation.md`](docs/hourly-publishing-automation.md): guarded hourly draft queue and no blind public auto-publish policy.
 - [`docs/analytics-search-reporting.md`](docs/analytics-search-reporting.md): weekly refresh, expand, prune, merge, Auto ads UX, and AdSense blocker decisions.
+- [`docs/daily-ops-audit.md`](docs/daily-ops-audit.md): read-only daily health audit and bounded repair escalation rules.
 - [`docs/deployment-rollback-guide.md`](docs/deployment-rollback-guide.md): content, theme, Auto ads, SEO, and hourly scheduler rollback.
 
 ## Account-Owned Actions

@@ -142,7 +142,7 @@ function yolkmeet_editorial_faq_items(): array
             'answer' => __('Check the source URLs, rerun the workflow with your own inputs, and record any pricing, policy, or tool changes that affect the recommendation.', 'yolkmeet-editorial'),
         ],
         [
-            'question' => __('How does Yolkmeet keep the guide current?', 'yolkmeet-editorial'),
+            'question' => __('How does YOLKMEET keep the guide current?', 'yolkmeet-editorial'),
             'answer' => __('Each guide keeps a visible update note so changed assumptions, retests, and source revisions can be reviewed without hiding the editorial history.', 'yolkmeet-editorial'),
         ],
     ];

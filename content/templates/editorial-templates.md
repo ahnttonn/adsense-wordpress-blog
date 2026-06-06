@@ -1,4 +1,4 @@
-# Yolkmeet Editorial Templates
+# YOLKMEET Editorial Templates
 
 These templates define the launch-batch article formats used by Task 8. They are intentionally operational and citation-led so the site does not publish empty listicles, copied SERP summaries, or unsupported product claims.
 
@@ -14,7 +14,7 @@ These templates define the launch-batch article formats used by Task 8. They are
 - Quick answer: winner by reader scenario, not a universal winner.
 - Comparison table: use cases, workflow fit, automation limits, pricing verification, and maintenance risk.
 - Selection path: 3-5 decision rules.
-- Internal links: at least two related Yolkmeet guides.
+- Internal links: at least two related YOLKMEET guides.
 - Source log and update policy.
 
 ## Alternative List

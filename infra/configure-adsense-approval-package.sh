@@ -14,7 +14,7 @@ usage() {
   cat <<'EOF'
 Usage: configure-adsense-approval-package.sh
 
-Publishes the fixed Yolkmeet trust-page set and navigation required for
+Publishes the fixed YOLKMEET trust-page set and navigation required for
 AdSense readiness. This script accepts no page slug or title arguments.
 
 Optional environment:
@@ -72,7 +72,7 @@ page_content() {
   case "$slug" in
     "about")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet publishes English-first practical AI automation guides, tool comparisons, prompt workflows, and source-aware editorial notes for operators, creators, and small teams.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET publishes English-first practical operator-tech field guides, automation playbooks, workflow comparisons, site operations notes, analytics/reporting guides, prompt workflows, and source-aware AI tool coverage for operators, creators, and small teams.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>Our articles are built around clear decisions, source URLs, review notes, and update logs so readers can verify the assumptions before adopting a workflow.</p><!-- /wp:paragraph -->
 EOF
       ;;
@@ -84,21 +84,21 @@ EOF
       ;;
     "privacy-policy")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet collects only the information needed to operate the publication, respond to reader messages, measure site performance, and maintain security. If you email editor@yolkmeet.com, we receive the information you choose to send.</p><!-- /wp:paragraph -->
-<!-- wp:paragraph --><p>The site may use privacy-conscious analytics, server logs, security tooling, affiliate disclosures, and Google advertising technologies after approval. Advertising partners may use cookies or similar technologies to measure ad delivery and prevent invalid activity.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET collects only the information needed to operate the publication, respond to reader messages, measure site performance, and maintain security. If you email editor@yolkmeet.com, we receive the information you choose to send.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>The site may use privacy-conscious analytics, server logs, security tooling, and Google advertising technologies after AdSense approval. Advertising partners may use cookies or similar technologies to measure ad delivery and prevent invalid activity.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>We do not sell reader contact details. Readers can request correction or deletion of direct contact messages by emailing editor@yolkmeet.com.</p><!-- /wp:paragraph -->
 EOF
       ;;
     "terms")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet provides editorial information about AI tools, automation workflows, and productivity systems. The content is for general informational use and is not legal, financial, medical, or professional advice.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET provides editorial information about operator technology, automation workflows, site operations, analytics/reporting, AI tools, prompt systems, and productivity systems. The content is for general informational use and is not legal, financial, medical, or professional advice.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>Readers are responsible for checking pricing, product terms, security requirements, and compliance obligations before adopting any workflow. Tool availability and policies can change after publication.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>Do not misuse this site, attempt to bypass security controls, scrape pages in a way that disrupts service, or submit unlawful material through contact channels.</p><!-- /wp:paragraph -->
 EOF
       ;;
     "editorial-policy")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet editorial policy starts with a reader problem, then records source URLs, source notes, decision criteria, caveats, and an update policy. We prioritize official documentation, public product pages, and reproducible workflow evidence over broad unsupported claims.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET editorial policy starts with a reader problem, then records source URLs, source notes, decision criteria, caveats, and an update policy. We prioritize official documentation, public product pages, and reproducible workflow evidence over broad unsupported claims.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>Competitor pages may be used for market research, search intent mapping, and format benchmarking, but their article bodies are not copied into publishable drafts.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>AI-assisted drafts are reviewed for usefulness, copied-body risk, unsupported claims, internal links, corrections, and review status before publication. We avoid fake freshness, invented citations, and claims of firsthand testing unless a real test artifact exists.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>When a material error is found, we review the source, update the article, and keep the update log visible where the article template supports it.</p><!-- /wp:paragraph -->
@@ -106,21 +106,21 @@ EOF
       ;;
     "ai-use-policy")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet may use AI systems to help research public sources, organize outlines, draft first passes, compare wording, and check internal consistency. AI output is not treated as a source of truth.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET may use AI systems to help research public sources, organize outlines, draft first passes, compare wording, and check internal consistency. AI output is not treated as a source of truth.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>Published articles must preserve source URLs, source notes, editorial review, and update assumptions. We do not intentionally publish copied article bodies, fabricated citations, or unsupported product claims generated by automation.</p><!-- /wp:paragraph -->
 <!-- wp:paragraph --><p>Readers should verify tool behavior in their own accounts because AI products, pricing, and policy details can change quickly.</p><!-- /wp:paragraph -->
 EOF
       ;;
     "affiliate-disclosure")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet may earn compensation from affiliate links, sponsorships, or advertising in the future. Affiliate links may earn a commission, but affiliate relationships do not control editorial recommendations or remove the requirement for source-aware analysis, caveats, and editorial review.</p><!-- /wp:paragraph -->
-<!-- wp:paragraph --><p>When an article contains affiliate links or sponsored material, the disclosure should appear near the relevant content or in a clearly visible disclosure area. Recommendations should remain based on reader fit, workflow evidence, and published source information.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET currently uses an AdSense-only monetization model. The site does not currently use affiliate links, sponsored placements, paid recommendations, or paid template funnels.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Advertising decisions must not control editorial recommendations or remove the requirement for source-aware analysis, caveats, and editorial review. The site does not ask readers to click ads or use manufactured traffic to influence AdSense, analytics, or ranking signals.</p><!-- /wp:paragraph -->
 EOF
       ;;
     "cookie-policy")
       cat <<'EOF'
-<!-- wp:paragraph --><p>Yolkmeet may use cookies or similar technologies for site security, basic preferences, analytics, affiliate measurement, and advertising after approval. Advertising cookies may be used by Google AdSense after approval to help measure ad delivery and prevent invalid traffic.</p><!-- /wp:paragraph -->
-<!-- wp:paragraph --><p>Readers can control cookies through browser settings. If additional consent tooling becomes required for a region or advertising partner, Yolkmeet will update this page and the site interface before relying on that consent path.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>YOLKMEET may use cookies or similar technologies for site security, basic preferences, analytics, and advertising after AdSense approval. Advertising cookies may be used by Google AdSense after approval to help measure ad delivery and prevent invalid traffic.</p><!-- /wp:paragraph -->
+<!-- wp:paragraph --><p>Readers can control cookies through browser settings. If additional consent tooling becomes required for a region or advertising partner, YOLKMEET will update this page and the site interface before relying on that consent path.</p><!-- /wp:paragraph -->
 EOF
       ;;
     *)

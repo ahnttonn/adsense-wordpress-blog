@@ -79,6 +79,8 @@ for label in "Tool Comparisons" "Workflow Automation" "Research Playbooks" "Mark
 done
 require_pattern 'term update category|--description' "updates category descriptions for archive pages"
 require_pattern 'option update blog_public 1' "allows AdSense and Google crawlers to verify the public site"
+require_pattern 'option update blogname "YOLKMEET"' "sets public brand casing"
+require_pattern 'option update blogdescription "Operator-tech field guides, automation playbooks, and workflow comparisons"' "sets broadened operator-tech tagline"
 require_pattern 'elementor|divi|beaver-builder|visual-composer' "guards against heavy builders"
 require_pattern 'delete_managed_menus' "clears managed menus before re-adding them"
 require_pattern 'for menu_slug in primary topics footer' "uses stable menu slugs for idempotent reruns"

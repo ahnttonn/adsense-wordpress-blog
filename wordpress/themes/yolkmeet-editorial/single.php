@@ -28,7 +28,7 @@
         </div>
         <section class="author-box">
             <h2><?php esc_html_e('Author and review note', 'yolkmeet-editorial'); ?></h2>
-            <p><?php esc_html_e('By the Yolkmeet editorial desk. Reviewed for workflow clarity, source notes, and update assumptions before publication.', 'yolkmeet-editorial'); ?></p>
+            <p><?php esc_html_e('By the YOLKMEET editorial desk. Reviewed for workflow clarity, source notes, and update assumptions before publication.', 'yolkmeet-editorial'); ?></p>
         </section>
         <section id="source-notes" class="source-note">
             <h2><?php esc_html_e('Source notes', 'yolkmeet-editorial'); ?></h2>

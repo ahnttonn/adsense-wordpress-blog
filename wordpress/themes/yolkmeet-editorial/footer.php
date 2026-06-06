@@ -4,7 +4,7 @@
     <div class="site-shell footer-grid">
         <div>
             <strong><?php bloginfo('name'); ?></strong>
-            <p><?php esc_html_e('Practical AI automation guides, tool comparisons, and workflow notes with source-aware editorial standards.', 'yolkmeet-editorial'); ?></p>
+            <p><?php esc_html_e('Practical operator-tech field guides, automation playbooks, workflow comparisons, and source-aware editorial standards.', 'yolkmeet-editorial'); ?></p>
         </div>
         <nav aria-label="<?php esc_attr_e('Footer navigation', 'yolkmeet-editorial'); ?>">
             <?php

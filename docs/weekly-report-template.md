@@ -14,10 +14,12 @@
 - Articles refreshed:
 - Article decay watchlist:
 - Internal links added:
-- IndexNow/sitemap coverage for new URLs:
+- IndexNow readiness/submission evidence for new URLs:
 - CTR/title/meta rewrites queued:
 - Thin-page expansion queued:
 - Community/social snippets prepared:
+- Distribution briefs reviewed:
+- Daily ops audit summaries reviewed:
 - Refresh decisions:
 - Expand decisions:
 - Prune decisions:

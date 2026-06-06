@@ -75,8 +75,8 @@ $operator_topics = [
         <?php else : ?>
             <article class="lead-story">
                 <p class="eyebrow"><?php esc_html_e('Launch desk', 'yolkmeet-editorial'); ?></p>
-                <h1><?php esc_html_e('AI automation guides are being prepared.', 'yolkmeet-editorial'); ?></h1>
-                <p class="dek"><?php esc_html_e('Yolkmeet is setting up source-aware guides, comparisons, and workflow notes.', 'yolkmeet-editorial'); ?></p>
+                <h1><?php esc_html_e('Operator-tech guides are being prepared.', 'yolkmeet-editorial'); ?></h1>
+                <p class="dek"><?php esc_html_e('YOLKMEET tracks source-aware operator-tech guides, automation playbooks, and workflow comparisons.', 'yolkmeet-editorial'); ?></p>
             </article>
         <?php endif; ?>
     </div>

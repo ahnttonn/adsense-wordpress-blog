@@ -127,8 +127,8 @@ ensure_sample_post() {
 }
 
 configure_site_options() {
-  wp_cli option update blogname "Yolkmeet" >/dev/null
-  wp_cli option update blogdescription "AI automation field guides and workflow comparisons" >/dev/null
+  wp_cli option update blogname "YOLKMEET" >/dev/null
+  wp_cli option update blogdescription "Operator-tech field guides, automation playbooks, and workflow comparisons" >/dev/null
   wp_cli option update home "$SITE_URL" >/dev/null
   wp_cli option update siteurl "$SITE_URL" >/dev/null
   wp_cli option update blog_public 1 >/dev/null
@@ -179,9 +179,9 @@ main() {
   require_root
   configure_site_options
   ensure_categories
-  ensure_page "About" "about" "<p>Yolkmeet publishes practical AI automation guides, workflow comparisons, and source-aware editorial notes for operators and creators.</p><p>Every launch article is designed to show what was tested, what changed, and what readers should verify for their own workflow.</p>"
+  ensure_page "About" "about" "<p>YOLKMEET publishes practical operator-tech field guides, automation playbooks, workflow comparisons, and source-aware editorial notes for operators, creators, and small teams.</p><p>Each guide is designed to show what changed, what can be verified from public sources, and what readers should check before adopting a workflow.</p>"
   ensure_page "Contact" "contact" "<p>Send corrections, tool updates, and partnership questions to <a href=\"mailto:editor@yolkmeet.com\">editor@yolkmeet.com</a>.</p><p>For article corrections, include the URL, the claim, and the source that should be reviewed.</p>"
-  ensure_page "Privacy" "privacy" "<p>Yolkmeet uses privacy-conscious analytics and may later use email subscriptions, affiliate links, and AdSense disclosures. Personal data collection is limited to what is needed to operate the publication.</p><p>AdSense and analytics details will be expanded before monetization launch.</p>"
+  ensure_page "Privacy" "privacy" "<p>YOLKMEET uses privacy-conscious analytics, server logs, security tooling, and Google AdSense after approval. Personal data collection is limited to what is needed to operate the publication, respond to reader messages, measure site performance, and maintain security.</p><p>YOLKMEET currently uses an AdSense-only monetization model and does not use affiliate links, sponsored placements, paid recommendations, or paid template funnels.</p>"
   ensure_sample_post
   install_theme
   configure_plugins

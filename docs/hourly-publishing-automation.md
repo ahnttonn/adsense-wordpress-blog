@@ -41,6 +41,12 @@ It moves candidates after each run:
 - passing candidates move to `content/hourly-queue/processed/`
 - blocked candidates move to `content/hourly-queue/blocked/`
 
+After a passing candidate is processed, the cron wrapper writes one manual-review growth brief to:
+
+- `content/distribution-queue/ready/`
+
+Blocked candidates must not create distribution briefs.
+
 Each candidate still goes through the lower-level gated queue command:
 
 ```bash
@@ -55,6 +61,8 @@ The command writes evidence under `.omo/evidence/hourly-publishing-cron/`:
 - `stderr.log`
 - `wp-publish.log`
 - `wp-publish.err`
+- `growth-brief.log`
+- `growth-brief.err`
 
 The queue must stop if any gate fails. Failed candidates move to `blocked/` and do not create or update a WordPress post.
 
@@ -100,7 +108,7 @@ Discovery constraints:
 - Do not use scraped copyrighted prose, paid content, or SERP snippets as article substance.
 - Respect robots.txt, terms, and rate limits.
 - Use crawling to identify source URLs, factual claims to verify, topic gaps, and update triggers only.
-- The final article must be original Yolkmeet analysis with `source_urls`, source notes, answer structure, and no unsupported private testing claims.
+- The final article must be original YOLKMEET analysis with `source_urls`, source notes, answer structure, and no unsupported private testing claims.
 
 ## Post-Publish Growth Queue
 
@@ -109,13 +117,19 @@ After a candidate is published, automation may queue only policy-safe growth wor
 Allowed post-publish actions:
 
 - Confirm the published URL is present in `https://www.yolkmeet.com/sitemap.xml`.
-- Confirm IndexNow is enabled for future publish/update/delete events.
+- Confirm IndexNow readiness or submission evidence exists for future publish/update/delete events.
 - Record whether Bing Webmaster Tools and Search Console show discovered, indexed, crawled-not-indexed, or error states.
 - Queue title, meta description, introduction, answer-block, FAQ, and table rewrites when impressions rise but CTR or query fit is weak.
 - Add or queue internal links from relevant articles, category pages, and related-post blocks.
 - Add or queue original templates, checklists, tables, screenshots, source notes, or update logs when a page is too thin.
 - Draft human-readable social/community snippets for manual review, without spam posting, fake engagement, repeated self-referrals, or automated account activity.
 - Review server logs for suspicious referral bursts before treating any traffic lift as useful growth evidence.
+
+The distribution queue is a review artifact, not an external-posting system:
+
+- `content/distribution-queue/ready/` contains snippets and follow-up checks awaiting manual review.
+- `content/distribution-queue/processed/` is for reviewed briefs after the operator finishes the follow-up.
+- `content/distribution-queue/blocked/` is for briefs rejected for stale facts, weak fit, or policy risk.
 
 ## Approval Metadata
 

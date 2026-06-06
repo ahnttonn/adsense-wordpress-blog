@@ -4,7 +4,7 @@ Generated: 2026-06-05
 
 ## Publication Model
 
-This repository stores publish-ready editorial drafts for an English-first AI tools and automation WordPress publication. The system is designed for comparison pages, alternatives pages, workflow tutorials, troubleshooting pages, prompt libraries, and pricing or use-case explainers. Every article must answer the reader quickly, show what sources were checked, avoid unsupported product claims, and leave a clear update path.
+This repository stores publish-ready editorial drafts for YOLKMEET, an English-first operator-tech publication. The system is designed for comparison pages, alternatives pages, workflow tutorials, site-ops guides, troubleshooting pages, prompt libraries, and pricing or use-case explainers. Every article must answer the reader quickly, show what sources were checked, avoid unsupported product claims, and leave a clear update path.
 
 ## Template Set
 
@@ -22,7 +22,7 @@ Each template requires title, slug, target keyword, meta title, meta description
 
 ## Launch Batch
 
-The first 30 posts live in `content/launch-batch/`. They cover high-priority launch clusters from the benchmark evidence: tool comparisons, alternatives, workflows, troubleshooting, prompt templates, pricing, and productivity use cases. All slugs are sanitized ASCII and publication-ready for WordPress import.
+The first 30 posts live in `content/launch-batch/`. They cover high-priority launch clusters from the benchmark evidence: tool comparisons, alternatives, workflows, troubleshooting, prompt templates, pricing, and productivity use cases. AI workflow automation remains a high-value cluster, but YOLKMEET should not rely on a single AI-tools lane. Durable AdSense growth requires a broader operator-tech library with refreshable, source-backed pages. All slugs are sanitized ASCII and publication-ready for WordPress import.
 
 ## Editorial Review Checklist
 

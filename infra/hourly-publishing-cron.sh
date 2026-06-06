@@ -9,6 +9,7 @@ ready_dir="$queue_dir/ready"
 processed_dir="$queue_dir/processed"
 blocked_dir="$queue_dir/blocked"
 evidence_root="${YOLKMEET_HOURLY_EVIDENCE_DIR:-$repo_root/.omo/evidence/hourly-publishing-cron}"
+distribution_queue_dir="${YOLKMEET_DISTRIBUTION_QUEUE_DIR:-$repo_root/content/distribution-queue}"
 lock_dir="${TMPDIR:-/tmp}/yolkmeet-hourly-publishing.lock"
 
 timestamp() {
@@ -19,13 +20,30 @@ log() {
   printf '%s %s\n' "$(timestamp)" "$*"
 }
 
+json_value() {
+  local file="$1"
+  local key="$2"
+  python3 - "$file" "$key" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as handle:
+    data = json.load(handle)
+
+value = data.get(sys.argv[2], "")
+if value is None:
+    value = ""
+print(value)
+PY
+}
+
 if ! mkdir "$lock_dir" 2>/dev/null; then
   log "skip: previous hourly publishing run is still active"
   exit 0
 fi
 trap 'rm -rf "$lock_dir"' EXIT
 
-mkdir -p "$ready_dir" "$processed_dir" "$blocked_dir" "$evidence_root"
+mkdir -p "$ready_dir" "$processed_dir" "$blocked_dir" "$evidence_root" "$distribution_queue_dir/ready" "$distribution_queue_dir/processed" "$distribution_queue_dir/blocked"
 
 candidate="$(find "$ready_dir" -maxdepth 1 -type f -name '*.md' | sort | sed -n '1p')"
 if [ -z "$candidate" ]; then
@@ -53,9 +71,21 @@ if bash "$repo_root/infra/hourly-publishing-queue.sh" --dry-run --candidate "$ca
   else
     log "publish skipped: YOLKMEET_AUTO_WP_PUBLISH is not 1"
   fi
-  mv "$candidate" "$processed_dir/$run_id-$candidate_name"
+  processed_candidate="$processed_dir/$run_id-$candidate_name"
+  mv "$candidate" "$processed_candidate"
   log "processed: $candidate_name -> $processed_dir/$run_id-$candidate_name"
   log "payload: $payload"
+  slug="$(json_value "$payload" slug)"
+  category_slug="$(json_value "$payload" category_slug)"
+  [ -n "$category_slug" ] || category_slug="uncategorized"
+  published_url="${YOLKMEET_PUBLIC_BASE_URL:-https://www.yolkmeet.com}/$category_slug/$slug/"
+  brief="$distribution_queue_dir/ready/$run_id-$candidate_stem.md"
+  if bash "$repo_root/infra/generate-post-publish-growth-brief.sh" --candidate "$processed_candidate" --url "$published_url" --output "$brief" >"$run_dir/growth-brief.log" 2>"$run_dir/growth-brief.err"; then
+    log "growth brief: $brief"
+  else
+    log "growth brief failed: $run_dir/growth-brief.err"
+    exit 1
+  fi
   exit 0
 else
   status=$?

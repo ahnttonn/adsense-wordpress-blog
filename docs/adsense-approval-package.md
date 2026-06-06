@@ -1,6 +1,6 @@
 # AdSense Approval Package
 
-This package prepares Yolkmeet for the AdSense application boundary. It publishes the fixed trust-page set, links those pages through primary and footer navigation, audits the live site, and records whether the site is ready for the user-owned AdSense submission step.
+This package prepares YOLKMEET for the AdSense application boundary. It publishes the fixed trust-page set, links those pages through primary and footer navigation, audits the live site, and records whether the site is ready for the user-owned AdSense submission step.
 
 ## Official Sources
 
@@ -36,7 +36,7 @@ Expected status model:
 
 Do not submit an AdSense application while any critical item is FAIL. Do not submit with fewer than the planned launch content minimum unless the user explicitly changes the launch requirement.
 
-No-placeholder-pages rule: every trust page must contain site-specific Yolkmeet policy text. A page fails readiness if it contains placeholder, coming soon, Lorem ipsum, TODO, sample-page copy, prompt-injection instructions, or generic policy text that does not explain Yolkmeet's editorial, AI, affiliate, cookie, privacy, or contact practices.
+No-placeholder-pages rule: every trust page must contain site-specific YOLKMEET policy text. A page fails readiness if it contains placeholder, coming soon, Lorem ipsum, TODO, sample-page copy, prompt-injection instructions, or generic policy text that does not explain YOLKMEET's editorial, AI, AdSense-only monetization, cookie, privacy, or contact practices.
 
 ## User-Owned Boundary
 

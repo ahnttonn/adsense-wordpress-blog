@@ -10,7 +10,9 @@ This preserves the current publish-ready corpus, avoids unnecessary URL churn, a
 
 ## Monetization Fit
 
-The launch batch should support an operator-tech publication rather than an AI-only blog. AI remains the largest pillar, but adjacent operations topics are required for durable AdSense coverage, repeat visits, and lower template repetition.
+The launch batch should support YOLKMEET as an operator-tech publication rather than an AI-only blog. AI remains the largest pillar, but adjacent operations topics are required for durable AdSense coverage, repeat visits, and lower template repetition.
+
+AI workflow automation remains a high-value cluster, but YOLKMEET should not rely on a single AI-tools lane. Durable AdSense growth requires a broader operator-tech library with refreshable, source-backed pages.
 
 ## 90-Day Pillar Split
 

@@ -103,17 +103,17 @@ if [ "$wp_sitemap_status" != "404" ]; then
   fail "unexpected wp-sitemap.xml status: expected 404, got $wp_sitemap_status"
 fi
 
-assert_contains "$home_html" "<title>Yolkmeet - AI automation field guides and workflow comparisons</title>" "homepage title"
+assert_contains "$home_html" "<title>YOLKMEET - Operator-tech field guides, automation playbooks, and workflow comparisons</title>" "homepage title"
 assert_contains "$home_html" "<meta name=\"robots\" content=\"max-snippet:-1,max-image-preview:large,max-video-preview:-1\" />" "homepage robots meta"
 assert_contains "$home_html" "<link rel=\"canonical\" href=\"https://www.yolkmeet.com/\" />" "homepage canonical URL"
 assert_contains "$home_html" "\"@type\":\"WebSite\"" "homepage WebSite schema"
 assert_contains "$home_html" "\"@type\":\"WebPage\"" "homepage WebPage schema"
 assert_contains "$home_html" "\"@type\":\"Organization\"" "homepage Organization schema"
-assert_contains "$home_html" "\"name\":\"Yolkmeet\"" "homepage schema brand name"
-assert_contains "$home_html" "\"description\":\"AI automation field guides and workflow comparisons\"" "homepage schema brand description"
+assert_contains "$home_html" "\"name\":\"YOLKMEET\"" "homepage schema brand name"
+assert_contains "$home_html" "\"description\":\"Operator-tech field guides, automation playbooks, and workflow comparisons\"" "homepage schema brand description"
 assert_contains "$home_html" "\"urlTemplate\":\"https://www.yolkmeet.com/search/{search_term_string}/\"" "homepage search action schema"
 
-assert_contains "$post_html" "<title>AI Workflow Automation Stack: Starter Notes - Yolkmeet</title>" "post title"
+assert_contains "$post_html" "<title>AI Workflow Automation Stack: Starter Notes - YOLKMEET</title>" "post title"
 assert_contains "$post_html" "<meta name=\"robots\" content=\"max-snippet:-1,max-image-preview:large,max-video-preview:-1\" />" "post robots meta"
 assert_contains "$post_html" "<link rel=\"canonical\" href=\"https://www.yolkmeet.com/ai-workflow-automation/ai-workflow-automation-stack-starter/\" />" "post canonical URL"
 assert_contains "$post_html" "<meta name=\"description\" content=\"A practical starter stack for AI workflow automation" "post meta description"

@@ -43,13 +43,15 @@
 - Record whether each watched page should refresh, expand, prune, merge, or remain unchanged.
 
 ## Policy-Safe Growth Actions
-- Confirm new published URLs appear in the sitemap and are covered by IndexNow after each publishing run.
+- Confirm new published URLs appear in the sitemap and have IndexNow readiness or submission evidence after each publishing run.
 - Check Search Console and Bing Webmaster Tools for indexed, discovered, crawled-not-indexed, and error states before creating more near-duplicate content.
 - Rewrite titles, meta descriptions, introductions, answer blocks, FAQs, and comparison tables when impressions rise but CTR or query fit is weak.
 - Add internal links from related articles and category pages when a new page is published or refreshed.
 - Add original templates, checklists, tables, screenshots, source notes, or update logs when a page is thin or generic.
 - Prepare human-readable social/community distribution snippets, but do not automate spam posts, fake engagement, or repeated self-referrals.
 - Review server logs for suspicious referral bursts before treating any traffic lift as a useful growth signal.
+- Review `content/distribution-queue/ready/` for manual post-publish briefs; move reviewed briefs to `processed/` or `blocked/` with the reason recorded in the weekly notes.
+- Use `docs/daily-ops-audit.md` for the daily read-only health check; create an ULW plan before any bounded repair.
 
 ## Weekly Report Template
 Use [`docs/weekly-report-template.md`](./weekly-report-template.md) as the operating worksheet for weekly review.
