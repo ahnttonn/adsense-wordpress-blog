@@ -173,6 +173,19 @@ function yolkmeet_editorial_robots(array $robots): array
 }
 add_filter('wp_robots', 'yolkmeet_editorial_robots');
 
+function yolkmeet_editorial_tsf_noindex_header(bool $set_noindex): bool
+{
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
+    $path = (string) wp_parse_url($request_uri, PHP_URL_PATH);
+
+    if (in_array($path, ['/robots.txt', '/sitemap.xml'], true)) {
+        return false;
+    }
+
+    return $set_noindex;
+}
+add_filter('the_seo_framework_set_noindex_header', 'yolkmeet_editorial_tsf_noindex_header');
+
 function yolkmeet_editorial_primary_category_name(): string
 {
     $categories = get_the_category();

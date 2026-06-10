@@ -104,6 +104,7 @@ forbid_pattern "$index_file" 'review gates|QA patterns|Launch desk' "removes int
 require_pattern "$index_file" 'Operator Tech Map|Browse by topic' "surfaces operator-tech topic discovery on the homepage"
 require_pattern "$index_file" 'YOLKMEET tracks source-aware operator-tech guides' "uses public brand casing in homepage fallback"
 require_pattern "$functions_file" 'How does YOLKMEET keep the guide current' "uses public brand casing in FAQ schema"
+require_pattern "$functions_file" 'the_seo_framework_set_noindex_header' "keeps robots and sitemap responses free of noindex headers"
 require_pattern "$theme_dir/footer.php" 'operator-tech field guides|Operator-tech field guides' "uses broader operator-tech footer positioning"
 require_pattern "$operator_style_file" 'Author: YOLKMEET' "uses public brand casing in operator theme author metadata"
 require_pattern "$operator_style_file" 'operator-tech field guides|Operator-tech field guides' "uses broader operator theme description"

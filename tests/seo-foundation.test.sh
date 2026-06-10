@@ -27,6 +27,19 @@ capture() {
   printf -v "$__name" '%s' "$body"
 }
 
+capture_headers() {
+  local __name="$1"
+  local url="$2"
+  local label="$3"
+  local headers=""
+
+  if ! headers="$(curl -sS -I --max-time 15 "$url")"; then
+    fail "failed to fetch $label headers: $url"
+  fi
+
+  printf -v "$__name" '%s' "$headers"
+}
+
 assert_contains() {
   local haystack="$1"
   local needle="$2"
@@ -76,14 +89,21 @@ assert_count_at_least() {
 home_html=""
 robots_txt=""
 sitemap_xml=""
+robots_headers=""
+sitemap_headers=""
 post_html=""
 wp_sitemap_status=""
 
 capture home_html "$home_url" "homepage"
 capture robots_txt "$robots_url" "robots.txt"
 capture sitemap_xml "$sitemap_url" "sitemap.xml"
+capture_headers robots_headers "$robots_url" "robots.txt"
+capture_headers sitemap_headers "$sitemap_url" "sitemap.xml"
 capture post_html "$post_url" "sample post"
 wp_sitemap_status="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 15 "$wp_sitemap_url" || true)"
+
+assert_not_contains "$robots_headers" "X-Robots-Tag: noindex" "robots.txt must not send an X-Robots-Tag noindex header"
+assert_not_contains "$sitemap_headers" "X-Robots-Tag: noindex" "sitemap.xml must not send an X-Robots-Tag noindex header"
 
 assert_contains "$robots_txt" "User-agent: *" "robots.txt user-agent rule"
 assert_contains "$robots_txt" "Disallow: /wp-admin/" "robots.txt admin disallow"
